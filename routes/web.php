@@ -15,13 +15,19 @@ use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TestController;
+
 /*
 |--------------------------------------------------------------------------
 | Public Routes
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+// Test route for debugging product creation
+Route::post('/test-product', [TestController::class, 'testCreateProduct'])->name('test.product');
+
+Route::get('/' , [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/contact', [App\Http\Controllers\ContactController::class, 'contact'])->name('contact');
 
@@ -36,6 +42,11 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+});
 
 /*
 |--------------------------------------------------------------------------

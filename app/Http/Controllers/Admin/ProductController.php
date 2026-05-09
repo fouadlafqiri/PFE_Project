@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -16,6 +15,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::with('category')->orderBy('created_at', 'desc')->paginate(15);
+
         return view('admin.products.index', compact('products'));
     }
 
@@ -25,6 +25,7 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
+
         return view('admin.products.create', compact('categories'));
     }
 
@@ -33,6 +34,9 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        // Debug: Log incoming request data
+        \Illuminate\Support\Facades\Log::info('Product Store Request:', $request->all());
+
         $validated = $request->validate([
             'idCategory' => 'required|exists:categories,idCategory',
             'nameProduct' => 'required|string|max:255',
@@ -40,25 +44,41 @@ class ProductController extends Controller
             'priceProduct' => 'required|numeric|min:0',
             'quantityProduct' => 'required|integer|min:0',
             'imageProduct' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_featured' => 'nullable|boolean',
-            'is_active' => 'nullable|boolean',
+            'is_featured' => 'sometimes|boolean',
+            'is_active' => 'sometimes|boolean',
         ]);
 
         // Handle image upload
         if ($request->hasFile('imageProduct')) {
             $image = $request->file('imageProduct');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('images/products'), $imageName);
+            $imageName = time().'_'.$image->getClientOriginalName();
+
+            // Ensure directory exists
+            $dir = public_path('images/products');
+            if (! file_exists($dir)) {
+                mkdir($dir, 0755, true);
+            }
+
+            $image->move($dir, $imageName);
             $validated['imageProduct'] = $imageName;
         }
 
-        $validated['is_featured'] = $request->has('is_featured') ? true : false;
-        $validated['is_active'] = $request->has('is_active') ? true : false;
+        $validated['is_featured'] = $request->has('is_featured');
+        $validated['is_active'] = $request->has('is_active');
 
-        Product::create($validated);
+        // Debug: Log validated data
+        \Illuminate\Support\Facades\Log::info('Validated Data:', $validated);
 
-        return redirect()->route('admin.products.index')
-                        ->with('success', 'Product created successfully!');
+        try {
+            $product = Product::create($validated);
+            \Illuminate\Support\Facades\Log::info('Product created successfully:', ['id' => $product->idProduct]);
+
+            return redirect()->route('admin.products.index')
+                ->with('success', 'Product created successfully!');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Product creation failed: ' . $e->getMessage());
+            return back()->with('error', 'Failed to create product: ' . $e->getMessage())->withInput();
+        }
     }
 
     /**
@@ -68,6 +88,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $categories = Category::all();
+
         return view('admin.products.edit', compact('product', 'categories'));
     }
 
@@ -75,42 +96,32 @@ class ProductController extends Controller
      * Update product
      */
     public function update(Request $request, $id)
-    {
-        $product = Product::findOrFail($id);
+{
+    $product = Product::findOrFail($id);
 
-        $validated = $request->validate([
-            'idCategory' => 'required|exists:categories,idCategory',
-            'nameProduct' => 'required|string|max:255',
-            'descriptionProduct' => 'nullable|string',
-            'priceProduct' => 'required|numeric|min:0',
-            'quantityProduct' => 'required|integer|min:0',
-            'imageProduct' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_featured' => 'nullable|boolean',
-            'is_active' => 'nullable|boolean',
-        ]);
+    $request->merge([
+        'is_active' => $request->has('is_active'),
+        'is_featured' => $request->has('is_featured'),
+    ]);
 
-        // Handle image upload
-        if ($request->hasFile('imageProduct')) {
-            // Delete old image if exists
-            if ($product->imageProduct && file_exists(public_path('images/products/' . $product->imageProduct))) {
-                unlink(public_path('images/products/' . $product->imageProduct));
-            }
+    $validated = $request->validate([
+        'idCategory' => 'required|exists:categories,idCategory',
+        'nameProduct' => 'required|string|max:255',
+        'descriptionProduct' => 'nullable|string',
+        'priceProduct' => 'required|numeric|min:0',
+        'quantityProduct' => 'required|integer|min:0',
+        'imageProduct' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'is_featured' => 'boolean',
+        'is_active' => 'boolean',
+    ]);
 
-            $image = $request->file('imageProduct');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('images/products'), $imageName);
-            $validated['imageProduct'] = $imageName;
-        }
+    // image upload ...
 
-        $validated['is_featured'] = $request->has('is_featured') ? true : false;
-        $validated['is_active'] = $request->has('is_active') ? true : false;
+    $product->update($validated);
 
-        $product->update($validated);
-
-        return redirect()->route('admin.products.index')
-                        ->with('success', 'Product updated successfully!');
-    }
-
+    return redirect()->route('admin.products.index')
+        ->with('success', 'Product updated successfully!');
+}
     /**
      * Delete product
      */
@@ -119,14 +130,14 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         // Delete image if exists
-        if ($product->imageProduct && file_exists(public_path('images/products/' . $product->imageProduct))) {
-            unlink(public_path('images/products/' . $product->imageProduct));
+        if ($product->imageProduct && file_exists(public_path('images/products/'.$product->imageProduct))) {
+            unlink(public_path('images/products/'.$product->imageProduct));
         }
 
         $product->delete();
 
         return redirect()->route('admin.products.index')
-                        ->with('success', 'Product deleted successfully!');
+            ->with('success', 'Product deleted successfully!');
     }
 
     /**
@@ -135,7 +146,7 @@ class ProductController extends Controller
     public function toggleStatus($id)
     {
         $product = Product::findOrFail($id);
-        $product->is_active = !$product->is_active;
+        $product->is_active = ! $product->is_active;
         $product->save();
 
         return back()->with('success', 'Product status updated!');
@@ -147,7 +158,7 @@ class ProductController extends Controller
     public function toggleFeatured($id)
     {
         $product = Product::findOrFail($id);
-        $product->is_featured = !$product->is_featured;
+        $product->is_featured = ! $product->is_featured;
         $product->save();
 
         return back()->with('success', 'Featured status updated!');

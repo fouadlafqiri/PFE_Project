@@ -93,17 +93,16 @@
                                 <div class="header-icons">
                                     <a class="shopping-cart" href="/cart"><i class="fas fa-shopping-cart"></i></a>
                                     <a class="mobile-hide search-bar-icon" href="#"><i class="fas fa-search"></i></a>
+                                    {{-- Profile Dropdown --}}
                                     @guest
-    {{-- Logged OUT: show Connexion button --}}
-    <a href="/login" class="boxed-btn" style="margin-left: 10px; padding: 8px 16px; font-size: 14px;">Connexion</a>
+    <a href="{{ route('login') }}" class="boxed-btn" style="margin-left:10px; padding:8px 16px; font-size:14px;">Connexion</a>
 @else
-    {{-- Logged IN: show profile avatar + dropdown --}}
     <div class="profile-wrap" style="position:relative; margin-left:10px;">
         <button class="profile-trigger" onclick="toggleProfileDrop(event)">
-            @if(Auth::user()->avatar)
-                <img src="{{ Auth::user()->avatar }}" alt="avatar">
+            @if(Auth::user()->photo)
+                <img src="{{ Auth::user()->photo }}" alt="avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;" />
             @else
-                {{ strtoupper(substr(Auth::user()->name, 0, 2)) }}
+                <span class="avatar-initials" style="width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:#333;color:#fff;font-size:14px;">{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</span>
             @endif
             <span>{{ explode(' ', Auth::user()->name)[0] }}</span>
             <i class="fas fa-chevron-down"></i>
@@ -112,13 +111,27 @@
             <div class="profile-drop-header">
                 <strong>{{ Auth::user()->name }}</strong>
                 <small>{{ Auth::user()->email }}</small>
+                @if(Auth::user()->phone)
+                    <small>{{ Auth::user()->phone }}</small>
+                @endif
             </div>
-            <a href="/profile"><i class="fas fa-user-pen"></i> Mon profil</a>
-            <a href="/orders"><i class="fas fa-box"></i> Mes commandes</a>
+
+            {{-- Admin only button --}}
+            @if(Auth::user()->role === 'admin')
+                <a href="{{ route('admin.dashboard') }}" class="admin-btn">
+                    <i class="fas fa-gauge"></i> Dashboard Admin
+                </a>
+                <div class="drop-divider"></div>
+            @endif  
+
+            <a href="{{ route('profile') }}"><i class="fas fa-user-pen"></i> Mon profil</a>
+            <a href="{{ route('orders.index') }}"><i class="fas fa-box"></i> Mes commandes</a>
             <div class="drop-divider"></div>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit"><i class="fas fa-right-from-bracket"></i> Déconnexion</button>
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-right-from-bracket"></i> Déconnexion
+                </button>
             </form>
         </div>
     </div>
@@ -326,5 +339,14 @@
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
 </body>
-
+<script>
+function toggleProfileDrop(e) {
+    e.stopPropagation();
+    document.querySelector('.profile-wrap').classList.toggle('open');
+}
+document.addEventListener('click', function() {
+    var w = document.querySelector('.profile-wrap');
+    if (w) w.classList.remove('open');
+});
+</script>
 </html>

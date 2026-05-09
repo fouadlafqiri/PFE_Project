@@ -13,7 +13,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::orderBy('created_at', 'desc')->paginate(15);
+        $categories = Category::withCount('products')
+            ->orderBy('idCategory', 'desc')
+            ->paginate(15);
+
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -40,7 +43,7 @@ class CategoryController extends Controller
         if ($request->hasFile('imageCategory')) {
             $image = $request->file('imageCategory');
             $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('images/categories'), $imageName);
+            $image->move(public_path('assets/img/categories'), $imageName);
             $validated['imageCategory'] = $imageName;
         }
 
@@ -75,13 +78,13 @@ class CategoryController extends Controller
         // Handle image upload
         if ($request->hasFile('imageCategory')) {
             // Delete old image if exists
-            if ($category->imageCategory && file_exists(public_path('images/categories/' . $category->imageCategory))) {
-                unlink(public_path('images/categories/' . $category->imageCategory));
+            if ($category->imageCategory && file_exists(public_path('assets/img/categories/' . $category->imageCategory))) {
+                unlink(public_path('assets/img/categories/' . $category->imageCategory));
             }
 
             $image = $request->file('imageCategory');
             $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('images/categories'), $imageName);
+            $image->move(public_path('assets/img/categories'), $imageName);
             $validated['imageCategory'] = $imageName;
         }
 

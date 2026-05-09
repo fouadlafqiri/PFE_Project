@@ -51,21 +51,43 @@
 						<div class="card">
 							<div class="card-body">
 								<div class="m-sm-3">
-									<form>
+									<form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
+										@csrf
+										@if($errors->any())
+											<div class="alert alert-danger">
+												<ul class="mb-0">
+													@foreach($errors->all() as $error)
+														<li>{{ $error }}</li>
+													@endforeach
+												</ul>
+											</div>
+										@endif
 										<div class="mb-3">
-											<label class="form-label">Full name</label>
-											<input class="form-control form-control-lg" type="text" name="name" placeholder="Enter your name" />
+											<label class="form-label">Nom complet</label>
+											<input class="form-control form-control-lg" type="text" name="name" placeholder="Entrez votre nom" value="{{ old('name') }}" required />
 										</div>
 										<div class="mb-3">
 											<label class="form-label">Email</label>
-											<input class="form-control form-control-lg" type="email" name="email" placeholder="Enter your email" />
+											<input class="form-control form-control-lg" type="email" name="email" placeholder="Entrez votre email" value="{{ old('email') }}" required />
 										</div>
 										<div class="mb-3">
-											<label class="form-label">Password</label>
-											<input class="form-control form-control-lg" type="password" name="password" placeholder="Enter password" />
+											<label class="form-label">Téléphone</label>
+											<input class="form-control form-control-lg" type="text" name="phone" placeholder="Entrez votre numéro" value="{{ old('phone') }}" />
+										</div>
+										<div class="mb-3">
+											<label class="form-label">Photo de profil</label>
+											<input class="form-control form-control-lg" type="file" name="photo" accept="image/*" />
+										</div>
+										<div class="mb-3">
+											<label class="form-label">Mot de passe</label>
+											<input class="form-control form-control-lg" type="password" name="password" placeholder="Entrez votre mot de passe" required />
+										</div>
+										<div class="mb-3">
+											<label class="form-label">Confirmez le mot de passe</label>
+											<input class="form-control form-control-lg" type="password" name="password_confirmation" placeholder="Confirmez le mot de passe" required />
 										</div>
 										<div class="d-grid gap-2 mt-3">
-											<a href="index.html" class="btn btn-lg btn-primary">Sign up</a>
+											<button type="submit" class="btn btn-lg btn-primary">S'inscrire</button>
 										</div>
 									</form>
 								</div>

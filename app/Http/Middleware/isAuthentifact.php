@@ -2,20 +2,20 @@
 
 namespace App\Http\Middleware;
 
+use Illuminate\Support\Facades\Auth;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class isAuthentifact
 {
-    public function handle(Request $request, Closure $next): Response
-    {
-        // ✅ Check if user is logged in AND is admin
-        if (!auth()->check() || auth()->user()->role !== 'admin') {
-            return redirect()->route('login')
-                           ->with('error', 'Accès refusé. Admins seulement.');
-        }
-
+    // app/Http/Middleware/isAuthentifact.php
+public function handle(Request $request, Closure $next)
+{
+    if (Auth::check() && Auth::user()->role === 'admin') {
         return $next($request);
     }
+
+    return redirect()->route('home');
+}
 }

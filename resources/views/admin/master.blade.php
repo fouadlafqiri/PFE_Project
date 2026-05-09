@@ -22,7 +22,6 @@
                 </a>
 
                 <ul class="sidebar-nav">
-                    <li class="sidebar-header">Navigation</li>
 
                     <li class="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                         <a class="sidebar-link" href="{{ route('admin.dashboard') }}">
