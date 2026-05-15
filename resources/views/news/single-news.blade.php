@@ -1,6 +1,6 @@
-@extends('layouts.master')
+@extends('layouts.masterr')
 
-@section('content')
+@section('content1')
 
 <!-- breadcrumb -->
 <div class="breadcrumb-section breadcrumb-bg">

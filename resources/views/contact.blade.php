@@ -1,6 +1,17 @@
-@extends('layouts.master')
-@section('content')
-
+@extends('layouts.masterr')
+@section('content1')
+<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>Fresh and Organic</p>
+						<h1>Contact</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 <div class="contact-from-section mt-150 mb-150">
 		<div class="container">
 			<div class="row">
@@ -10,8 +21,16 @@
 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur, ratione! Laboriosam est, assumenda. Perferendis, quo alias quaerat aliquid. Corporis ipsum minus voluptate? Dolore, esse natus!</p>
 					</div>
 				 	<div id="form_status"></div>
+
+					@if(session('success'))
+						<div class="alert alert-success" role="alert">
+							{{ session('success') }}
+						</div>
+					@endif
+
 					<div class="contact-form">
-						<form type="POST" id="fruitkha-contact" onSubmit="return valid_datas( this );">
+						<form method="POST" action="{{ route('contact.store') }}" id="fruitkha-contact" onSubmit="return valid_datas( this );">
+							@csrf
 							<p>
 								<input type="text" placeholder="Name" name="name" id="name">
 								<input type="email" placeholder="Email" name="email" id="email">
@@ -21,7 +40,6 @@
 								<input type="text" placeholder="Subject" name="subject" id="subject">
 							</p>
 							<p><textarea name="message" id="message" cols="30" rows="10" placeholder="Message"></textarea></p>
-							<input type="hidden" name="token" value="FsWga4&@f6aw" />
 							<p><input type="submit" value="Submit"></p>
 						</form>
 					</div>

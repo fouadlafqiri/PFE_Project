@@ -1,6 +1,20 @@
-@extends('layouts.master')
+@extends('layouts.masterr')
 
-@section('content')
+@section('content1')
+<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>Fresh and Organic</p>
+						<h1>Profile</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
 <div class="profile-page section-padding" style="padding-top: 40px; padding-bottom: 80px;">
     <div class="container">
         <div class="row justify-content-center">

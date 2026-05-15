@@ -176,7 +176,7 @@
                         </td>
                         <td>{{ $order->created_at->format('d/m/Y') }}</td>
                         <td>
-                            <a href="{{ route('admin.orders.show', $order->id) }}"
+                            <a href="{{ route('admin.orders.show', $order->idOrder) }}"
                                class="btn btn-sm btn-primary">
                                 <i data-feather="eye"></i>
                             </a>
@@ -201,7 +201,7 @@
             <div class="card-body">
                 @forelse($latestProducts as $product)
                 <div class="d-flex align-items-center mb-3">
-                    <img src="{{ asset('assets/img/products/' . $product->imageProduct) }}"
+                    <img src="{{ asset('images/products/' . $product->imageProduct) }}"
                          alt="{{ $product->nameProduct }}"
                          class="rounded me-3"
                          style="width:45px; height:45px; object-fit:cover;">

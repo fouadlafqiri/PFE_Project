@@ -5,6 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\CartItem> $cartItems
+ * @property-read int|null $cart_items_count
+ * @property-read \Illuminate\Foundation\Auth\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Cart query()
+ * @mixin \Eloquent
+ */
 class Cart extends Model
 {
     use HasFactory;

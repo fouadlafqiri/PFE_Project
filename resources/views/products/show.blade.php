@@ -1,6 +1,19 @@
-@extends('layouts.master')
+@extends('layouts.masterr')
 
-@section('content')
+@section('content1')
+
+<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>Fresh and Organic</p>
+						<h1>Produits</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 <!-- section liste des fonctionnalités -->
 <div class="list-section pt-80 pb-80">
@@ -44,8 +57,9 @@
         <!-- Produit principal -->
         <div class="row mb-80">
             <div class="col-lg-6 text-center">
-                <img src="{{ asset('assets/img/products/' . $product->imageProduct) }}"
-                     alt="{{ $product->nameProduct }}" class="img-fluid">
+                <img src="{{ asset('images/products/' . $product->imageProduct) }}"
+                     alt="{{ $product->nameProduct }}" class="img-fluid"
+                     style="max-height: 400px; object-fit: cover;">
             </div>
             <div class="col-lg-6">
                 <h2>{{ $product->nameProduct }}</h2>
@@ -95,25 +109,40 @@
                     <p>Aucun avis pour ce produit.</p>
                 @endforelse
 
-                <!-- Formulaire avis (connecté uniquement) -->
+                <!-- Formulaire avis (connecté + achat obligatoire) -->
                 @auth
-                    <h4 class="mt-4">Laisser un avis</h4>
-                    <form action="{{ route('reviews.store', $product->idProduct) }}" method="POST">
-                        @csrf
-                        <div class="mb-3">
-                            <label>Note</label>
-                            <select name="rating" class="form-control w-25">
-                                @for ($i = 1; $i <= 5; $i++)
-                                    <option value="{{ $i }}">{{ $i }} étoile(s)</option>
-                                @endfor
-                            </select>
+                    @if ($hasPurchased)
+                        <button type="button" class="cart-btn" onclick="document.getElementById('review-form-{{ $product->idProduct }}').scrollIntoView({behavior:'smooth'}); document.getElementById('review-form-{{ $product->idProduct }}').style.display='block';">
+                            <i class="fas fa-pen"></i> Laisser un avis
+                        </button>
+
+                        <form id="review-form-{{ $product->idProduct }}" action="{{ route('reviews.store', $product->idProduct) }}" method="POST" style="display:none; margin-top:20px;">
+                            @csrf
+                            <div class="mb-3">
+                                <label>Note</label>
+                                <select name="rating" class="form-control w-25">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <option value="{{ $i }}">{{ $i }} étoile(s)</option>
+                                    @endfor
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label>Commentaire</label>
+                                <textarea name="comment" class="form-control" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="cart-btn">Envoyer</button>
+                        </form>
+                    @else
+                        <div class="alert alert-info mt-4">
+                            <i class="fas fa-info-circle"></i>
+                            Vous devez acheter ce produit et recevoir la commande pour pouvoir laisser un avis.
                         </div>
-                        <div class="mb-3">
-                            <label>Commentaire</label>
-                            <textarea name="comment" class="form-control" rows="3"></textarea>
-                        </div>
-                        <button type="submit" class="cart-btn">Envoyer</button>
-                    </form>
+                    @endif
+                @else
+                    <div class="alert alert-warning mt-4">
+                        <i class="fas fa-lock"></i>
+                        <a href="{{ route('login') }}">Connectez-vous</a> pour laisser un avis.
+                    </div>
                 @endauth
             </div>
         </div>

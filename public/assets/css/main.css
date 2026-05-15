@@ -1517,15 +1517,15 @@ input[type="submit"] {
 }
 
 .homepage-bg-1 {
-  background-image: url(../img/hero-bg.jpg);
+  background-image: url(../img/background/img-bg-1.avif);
 }
 
 .homepage-bg-2 {
-  background-image: url(../img/hero-bg-2.jpg);
+  background-image: url(../img/background/img-bg-2.avif);
 }
 
 .homepage-bg-3 {
-  background-image: url(../img/hero-bg-3.jpg);
+  background-image: url(../img/background/img-bg-3.avif);
 }
 
 .homepage-slider {

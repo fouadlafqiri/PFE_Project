@@ -33,53 +33,51 @@ class ProductController extends Controller
      * Store new product
      */
     public function store(Request $request)
-    {
-        // Debug: Log incoming request data
-        \Illuminate\Support\Facades\Log::info('Product Store Request:', $request->all());
+{
+    $request->merge([
+        'is_active' => $request->has('is_active'),
+        'is_featured' => $request->has('is_featured'),
+    ]);
 
-        $validated = $request->validate([
-            'idCategory' => 'required|exists:categories,idCategory',
-            'nameProduct' => 'required|string|max:255',
-            'descriptionProduct' => 'nullable|string',
-            'priceProduct' => 'required|numeric|min:0',
-            'quantityProduct' => 'required|integer|min:0',
-            'imageProduct' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_featured' => 'sometimes|boolean',
-            'is_active' => 'sometimes|boolean',
-        ]);
+    $validated = $request->validate([
+        'idCategory' => 'required|exists:categories,idCategory',
+        'nameProduct' => 'required|string|max:255',
+        'descriptionProduct' => 'nullable|string',
+        'priceProduct' => 'required|numeric|min:0',
+        'quantityProduct' => 'required|integer|min:0',
+        'imageProduct' => 'sometimes|nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'is_featured' => 'boolean',
+        'is_active' => 'boolean',
+    ]);
 
-        // Handle image upload
-        if ($request->hasFile('imageProduct')) {
-            $image = $request->file('imageProduct');
-            $imageName = time().'_'.$image->getClientOriginalName();
+    // Debug: Log validated data
+    \Log::info('Validated Data:', $validated);
 
-            // Ensure directory exists
-            $dir = public_path('images/products');
-            if (! file_exists($dir)) {
-                mkdir($dir, 0755, true);
-            }
+    if ($request->hasFile('imageProduct')) {
 
-            $image->move($dir, $imageName);
-            $validated['imageProduct'] = $imageName;
+        $image = $request->file('imageProduct');
+
+        $imageName = time().'_'.$image->getClientOriginalName();
+
+        $dir = public_path('images/products');
+
+        if (!file_exists($dir)) {
+            mkdir($dir, 0755, true);
         }
 
-        $validated['is_featured'] = $request->has('is_featured');
-        $validated['is_active'] = $request->has('is_active');
+        $image->move($dir, $imageName);
 
-        // Debug: Log validated data
-        \Illuminate\Support\Facades\Log::info('Validated Data:', $validated);
-
-        try {
-            $product = Product::create($validated);
-            \Illuminate\Support\Facades\Log::info('Product created successfully:', ['id' => $product->idProduct]);
-
-            return redirect()->route('admin.products.index')
-                ->with('success', 'Product created successfully!');
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Product creation failed: ' . $e->getMessage());
-            return back()->with('error', 'Failed to create product: ' . $e->getMessage())->withInput();
-        }
+        $validated['imageProduct'] = $imageName;
     }
+
+    Product::create($validated);
+
+    // Debug: Log successful creation
+    \Log::info('Product created successfully');
+
+    return redirect()->route('admin.products.index')
+        ->with('success', 'Product created successfully!');
+}
 
     /**
      * Show edit product form

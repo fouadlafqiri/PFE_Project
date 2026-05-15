@@ -51,6 +51,13 @@
                         </a>
                     </li>
 
+                    <li class="sidebar-item {{ request()->routeIs('admin.deliveries.*') ? 'active' : '' }}">
+                        <a class="sidebar-link" href="{{ route('admin.deliveries.index') }}">
+                            <i class="align-middle" data-feather="truck"></i>
+                            <span class="align-middle">Livreurs</span>
+                        </a>
+                    </li>
+
                     <li class="sidebar-item {{ request()->routeIs('admin.profile') ? 'active' : '' }}">
                         <a class="sidebar-link" href="{{ route('admin.profile') }}">
                             <i class="align-middle" data-feather="user"></i>

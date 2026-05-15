@@ -1,7 +1,20 @@
-@extends('layouts.master')
+@extends('layouts.masterr')
 
-@section('content')
-
+@section('content1')
+<!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>Fresh and Organic</p>
+						<h1>Produits</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
 <!-- section liste des fonctionnalités -->
 <div class="list-section pt-80 pb-80">
     <div class="container">
@@ -127,7 +140,9 @@
                         <div class="product-image">
                             <a href="{{ route('products.show', $product->idProduct) }}">
                                 <img src="{{ asset('images/products/' . $product->imageProduct) }}"
-                                    alt="{{ $product->nameProduct }}">
+                                    alt="{{ $product->nameProduct }}"
+                                    style="width: 100%; height: 200px; object-fit: cover;"
+                                    >
                             </a>
                         </div>
 

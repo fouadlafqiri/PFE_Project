@@ -75,4 +75,10 @@
             <p>{{ $order->notes ?? 'Aucune note' }}</p>
         </div>
     </div>
+
+    <div class="row g-3 mt-3">
+        <div class="col-md-12">
+            @include('admin.orders.delivery-form')
+        </div>
+    </div>
 @endsection

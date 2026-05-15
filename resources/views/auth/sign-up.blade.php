@@ -75,10 +75,6 @@
 											<input class="form-control form-control-lg" type="text" name="phone" placeholder="Entrez votre numéro" value="{{ old('phone') }}" />
 										</div>
 										<div class="mb-3">
-											<label class="form-label">Photo de profil</label>
-											<input class="form-control form-control-lg" type="file" name="photo" accept="image/*" />
-										</div>
-										<div class="mb-3">
 											<label class="form-label">Mot de passe</label>
 											<input class="form-control form-control-lg" type="password" name="password" placeholder="Entrez votre mot de passe" required />
 										</div>

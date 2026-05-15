@@ -10,21 +10,31 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id('idOrder');
+
             $table->unsignedBigInteger('user_id');
+
             $table->string('order_number')->unique();
-            $table->decimal('total_amount', 10, 2);
-            $table->enum('status', ['pending', 'processing', 'shipped', 'delivered', 'cancelled'])->default('pending');
-            $table->string('payment_method');
-            $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
-            $table->text('shipping_address');
-            $table->text('billing_address');
-            $table->string('customer_name');
-            $table->string('customer_email');
+            $table->decimal('total_amount', 10, 2)->default(0);
+
+            $table->string('status')->nullable();
+            $table->string('payment_method')->nullable();
+            $table->string('payment_status')->nullable();
+
+            $table->text('shipping_address')->nullable();
+            $table->text('billing_address')->nullable();
+
+            $table->string('customer_name')->nullable();
+            $table->string('customer_email')->nullable();
             $table->string('customer_phone')->nullable();
+
             $table->text('notes')->nullable();
+
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
         });
     }
 

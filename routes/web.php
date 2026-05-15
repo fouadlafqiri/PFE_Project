@@ -14,9 +14,10 @@ use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\TestController;
+use App\Http\Controllers\Admin\DeliveryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,11 +26,11 @@ use App\Http\Controllers\TestController;
 */
 
 // Test route for debugging product creation
-Route::post('/test-product', [TestController::class, 'testCreateProduct'])->name('test.product');
 
 Route::get('/' , [HomeController::class, 'index'])->name('home');
 Route::get('/about', [AboutController::class, 'about'])->name('about');
 Route::get('/contact', [App\Http\Controllers\ContactController::class, 'contact'])->name('contact');
+Route::post('/contact', [App\Http\Controllers\ContactController::class, 'store'])->name('contact.store');
 
 /*
 |--------------------------------------------------------------------------
@@ -147,6 +148,26 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::delete('/{id}', [AdminOrderController::class, 'destroy'])->name('destroy');
         Route::get('/{id}/invoice', [AdminOrderController::class, 'invoice'])->name('invoice');
     });
+
+    // Reviews
+    Route::prefix('reviews')->name('reviews.')->group(function () {
+        Route::get('/', [AdminReviewController::class, 'index'])->name('index');
+        Route::post('/{review}/approve', [AdminReviewController::class, 'approve'])->name('approve');
+        Route::post('/{review}/reject', [AdminReviewController::class, 'reject'])->name('reject');
+        Route::post('/{review}/toggle', [AdminReviewController::class, 'toggle'])->name('toggle');
+    });
+
+    // Deliveries
+    Route::prefix('deliveries')->name('deliveries.')->group(function () {
+        Route::get('/', [DeliveryController::class, 'index'])->name('index');
+        Route::get('/create', [DeliveryController::class, 'create'])->name('create');
+        Route::post('/', [DeliveryController::class, 'store'])->name('store');
+        Route::get('/{delivery}/edit', [DeliveryController::class, 'edit'])->name('edit');
+        Route::put('/{delivery}', [DeliveryController::class, 'update'])->name('update');
+        Route::delete('/{delivery}', [DeliveryController::class, 'destroy'])->name('destroy');
+        Route::post('/assign-order', [DeliveryController::class, 'assignOrder'])->name('assign-order');
+    });
+
+    // Order Delivery Status Update
+    Route::put('/order-deliveries/{orderDelivery}/status', [DeliveryController::class, 'updateDeliveryStatus'])->name('orderDeliveries.updateStatus');
 });
-
-

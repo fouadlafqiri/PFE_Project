@@ -1,32 +1,21 @@
-@extends('layouts.master')
+@extends('layouts.masterr')
 
-@section('content')
+@section('content1')
 
-<!-- breadcrumb -->
-{{-- <div class="breadcrumb-section breadcrumb-bg">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 offset-lg-2 text-center">
-                 <div class="breadcrumb-text">
-                    <p>Votre sélection</p>
-                    <h1>Panier</h1>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> --}}
 
-<!-- cart -->
-<div class="container">
-        <div class="row">
-            <div class="col-lg-8 offset-lg-2 text-center">
-                 <div class="breadcrumb-text">
-                    <p>Votre sélection</p>
-                    <h1>Panier</h1>
-                </div>
-            </div>
-        </div>
-    </div>
+
+<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<p>Votre selection</p>
+						<h1>Panier</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 <div class="cart-section mt-150 mb-150">
     <div class="container">
 
@@ -72,10 +61,9 @@
 
                                 {{-- Image --}}
                                 <td class="product-image">
-                                    <img src="{{ asset('assets/img/products/' . $item->product->imageProduct) }}"
+                                    <img src="{{ asset('images/products/' . $item->product->imageProduct) }}"
                                          alt="{{ $item->product->nameProduct }}" width="80">
                                 </td>
-
                                 {{-- Nom --}}
                                 <td class="product-name">
                                     <a href="{{ route('products.show', $item->product->idProduct) }}">

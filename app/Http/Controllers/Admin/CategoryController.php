@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -47,6 +48,8 @@ class CategoryController extends Controller
             $validated['imageCategory'] = $imageName;
         }
 
+        $validated['slug'] = Str::slug($validated['nameCategory']);
+
         Category::create($validated);
 
         return redirect()->route('admin.categories.index')
@@ -87,6 +90,8 @@ class CategoryController extends Controller
             $image->move(public_path('assets/img/categories'), $imageName);
             $validated['imageCategory'] = $imageName;
         }
+
+        $validated['slug'] = Str::slug($validated['nameCategory']);
 
         $category->update($validated);
 

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Review;
+use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -60,15 +62,18 @@ class ProductController extends Controller
      * @param mixed $idCategory
      * @return \Illuminate\Contracts\View\View
      */
-    public function showByCategory($idCategory)
+    /**
+ * Display products by category
+ */
+public function showByCategory($idCategory)
 {
     $products = Product::where('idCategory', $idCategory)
         ->where('is_active', true)
         ->get();
 
-    $category = Category::findOrFail($idCategory);
+    $category = Category::findOrFail($idCategory, ['*']);
 
-    return view('products.by-category', compact('products', 'category'));
+    return view('products.category', compact('products', 'category'));
 }
 
     /**
@@ -90,7 +95,17 @@ class ProductController extends Controller
         $averageRating = $product->reviews()->where('is_approved', true)->avg('rating');
         $totalReviews = $product->reviews()->where('is_approved', true)->count();
 
-        return view('products.show', compact('product', 'relatedProducts', 'averageRating', 'totalReviews'));
+        // Check if current user has purchased this product
+        $hasPurchased = false;
+        if (Auth::check()) {
+            $hasPurchased = Order::where('user_id', Auth::id())
+                                ->whereHas('orderItems', function($query) use ($productId) {
+                                    $query->where('product_id', $productId);
+                                })
+                                ->exists();
+        }
+
+        return view('products.show', compact('product', 'relatedProducts', 'averageRating', 'totalReviews', 'hasPurchased'));
     }
 
     /**

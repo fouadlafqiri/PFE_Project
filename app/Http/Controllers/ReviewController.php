@@ -29,23 +29,19 @@ class ReviewController extends Controller
                                ->first();
 
         if ($existingReview) {
-            return back()->with('error', 'You have already reviewed this product!');
+            return back()->with('error', 'Vous avez déjà laissé un avis pour ce produit!');
         }
 
-        // Optional: Check if user has purchased this product
-        // Uncomment below to enforce this rule
-        /*
+        // Check if user has purchased this product
         $hasPurchased = Order::where('user_id', Auth::id())
                             ->whereHas('orderItems', function($query) use ($productId) {
                                 $query->where('product_id', $productId);
                             })
-                            ->where('status', 'delivered')
                             ->exists();
 
         if (!$hasPurchased) {
-            return back()->with('error', 'You can only review products you have purchased!');
+            return back()->with('error', 'Vous ne pouvez laisser un avis que pour les produits que vous avez achetés!');
         }
-        */
 
         // Create review
         Review::create([
@@ -56,7 +52,7 @@ class ReviewController extends Controller
             'is_approved' => false, // Admin needs to approve
         ]);
 
-        return back()->with('success', 'Thank you! Your review has been submitted and is pending approval.');
+        return back()->with('success', 'Merci! Votre avis a été soumis et est en attente d\'approbation.');
     }
 
     /**
@@ -73,7 +69,7 @@ class ReviewController extends Controller
 
         // Check if review belongs to current user
         if ($review->user_id != Auth::id()) {
-            return back()->with('error', 'Unauthorized action!');
+            return back()->with('error', 'Action non autorisée!');
         }
 
         $review->update([
@@ -82,7 +78,7 @@ class ReviewController extends Controller
             'is_approved' => false, // Re-submit for approval after edit
         ]);
 
-        return back()->with('success', 'Your review has been updated and is pending approval.');
+        return back()->with('success', 'Votre avis a été mis à jour et est en attente d\'approbation.');
     }
 
     /**
@@ -94,11 +90,11 @@ class ReviewController extends Controller
 
         // Check if review belongs to current user
         if ($review->user_id != Auth::id()) {
-            return back()->with('error', 'Unauthorized action!');
+            return back()->with('error', 'Action non autorisée!');
         }
 
         $review->delete();
 
-        return back()->with('success', 'Your review has been deleted.');
+        return back()->with('success', 'Votre avis a été supprimé.');
     }
 }

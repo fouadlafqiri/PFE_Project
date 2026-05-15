@@ -5,6 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property-read \App\Models\Cart|null $cart
+ * @property-read \App\Models\Product|null $product
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CartItem newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CartItem newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CartItem query()
+ * @mixin \Eloquent
+ */
 class CartItem extends Model
 {
     use HasFactory;

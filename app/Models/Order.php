@@ -5,6 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\OrderDelivery> $orderDeliveries
+ * @property-read int|null $order_deliveries_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\OrderItem> $orderItems
+ * @property-read int|null $order_items_count
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Order query()
+ * @mixin \Eloquent
+ */
 class Order extends Model
 {
     use HasFactory;
@@ -41,6 +52,12 @@ class Order extends Model
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class, 'order_id', 'idOrder');
+    }
+
+    // An order has delivery records
+    public function orderDeliveries()
+    {
+        return $this->hasMany(OrderDelivery::class, 'order_id', 'idOrder');
     }
 
     // Generate unique order number

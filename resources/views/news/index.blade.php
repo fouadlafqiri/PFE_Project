@@ -1,6 +1,6 @@
-@extends('layouts.master')
+@extends('layouts.masterr')
 
-@section('content')
+@section('content1')
 
 <!-- breadcrumb-section -->
 <div class="breadcrumb-section breadcrumb-bg">
@@ -77,8 +77,10 @@
                 <div class="single-product-item">
                     <div class="product-image">
                         <a href="{{ route('products.show', $product->idProduct) }}">
-                            <img src="{{ asset("assets/img/products/{$product->imageProduct}") }}"
-                                 alt="{{ $product->nameProduct }}">
+                            <img src="{{ asset('images/products/' . $product->imageProduct) }}"
+                                 alt="{{ $product->nameProduct }}"
+                                 style="width: 100%; height: 200px; object-fit: cover;"
+                                 >
                         </a>
                     </div>
                     <h3>{{ $product->nameProduct }}</h3>
