@@ -11,9 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // ✅ Register admin middleware alias here
+        // ✅ Register middleware aliases
         $middleware->alias([
             'admin' => \App\Http\Middleware\isAuthentifact::class,
+            'isAdminOrLivreur' => \App\Http\Middleware\isAdminOrLivreur::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -96,17 +96,26 @@ class DeliveryController extends Controller
             'delivery_id' => 'required|exists:deliveries,idDelivery',
         ]);
 
-        // Check if order is already assigned
-        $existing = OrderDelivery::where('order_id', $validated['order_id'])->first();
-        if ($existing) {
-            return back()->with('error', 'Cette commande est déjà assignée à un livreur');
-        }
+        try {
+            // Check if order is already assigned
+            $existing = OrderDelivery::where('order_id', $validated['order_id'])->first();
+            if ($existing) {
+                return back()->with('error', 'Cette commande est déjà assignée à un livreur');
+            }
 
-        OrderDelivery::create([
-            'order_id' => $validated['order_id'],
-            'delivery_id' => $validated['delivery_id'],
-            'assigned_at' => now(),
-        ]);
+            OrderDelivery::create([
+                'order_id' => $validated['order_id'],
+                'delivery_id' => $validated['delivery_id'],
+                'assigned_at' => now(),
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Prevent 500 if the table isn't created yet.
+            if (str_contains($e->getMessage(), 'order_deliveries')) {
+                return back()->with('error', 'Impossible d’assigner : la table order_deliveries est manquante. Veuillez exécuter: php artisan migrate');
+            }
+
+            throw $e;
+        }
 
         // Update order status to processing
         Order::find($validated['order_id'])->update(['status' => 'processing']);

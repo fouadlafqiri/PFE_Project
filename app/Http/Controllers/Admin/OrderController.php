@@ -105,7 +105,15 @@ class OrderController extends Controller
         ]);
 
         $order = Order::findOrFail($id);
+
+        $oldPaymentStatus = $order->payment_status;
         $order->payment_status = $validated['payment_status'];
+
+        // Si paiement devient payé => commande livrée
+        if ($oldPaymentStatus !== 'paid' && $order->payment_status === 'paid') {
+            $order->status = 'delivered';
+        }
+
         $order->save();
 
         return back()->with('success', 'Payment status updated successfully!');

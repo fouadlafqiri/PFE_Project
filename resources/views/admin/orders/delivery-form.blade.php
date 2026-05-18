@@ -5,7 +5,23 @@
     </div>
     <div class="card-body">
         @php
-            $currentDelivery = $order->orderDeliveries()->first();
+            $currentDelivery = null;
+
+            try {
+                $currentDelivery = $order->orderDeliveries()->first();
+            } catch (\Illuminate\Database\QueryException $e) {
+                // If the order_deliveries table doesn't exist yet, avoid breaking the whole page.
+                if (str_contains($e->getMessage(), 'order_deliveries')) {
+                    $currentDelivery = null;
+                    // keep rendering the assign form
+                    \Log::warning('order_deliveries table missing while rendering delivery-form', [
+                        'order_id' => $order->idOrder ?? null,
+                        'error' => $e->getMessage(),
+                    ]);
+                } else {
+                    throw $e;
+                }
+            }
         @endphp
 
         @if($currentDelivery)

@@ -184,4 +184,61 @@ class CartController extends Controller
 
         return $cart->session_id == session()->getId();
     }
+public function applyCoupon(Request $request)
+{
+    $request->validate([
+        'coupon_code' => 'required'
+    ]);
+
+    $couponCode = strtoupper($request->coupon_code);
+
+    // Valid coupon
+    if ($couponCode === 'PROMO30') {
+
+        // Get current cart
+        $cart = $this->getCart();
+
+        if (!$cart) {
+            return back()->with('error', 'Panier vide.');
+        }
+
+        // Get cart items
+        $cartItems = $cart->cartItems()->with('product')->get();
+
+        // Calculate subtotal
+        $subtotal = 0;
+
+        foreach ($cartItems as $item) {
+
+            $subtotal += $item->product->priceProduct * $item->quantity;
+
+        }
+
+        // 30% discount
+        $discount = ($subtotal * 30) / 100;
+
+        // Shipping
+        $shipping = $subtotal >= 75 ? 0 : 45;
+
+        // New total
+        $newTotal = ($subtotal - $discount) + $shipping;
+
+        // Save coupon session
+        session()->put('coupon', [
+
+            'code' => $couponCode,
+
+            'discount_percent' => 30,
+
+            'discount_amount' => $discount,
+
+            'new_total' => $newTotal,
+
+        ]);
+
+        return back()->with('success', 'Coupon applied successfully!');
+    }
+
+    return back()->with('error', 'Invalid coupon code!');
+}
 }

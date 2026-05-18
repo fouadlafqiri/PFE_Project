@@ -85,7 +85,7 @@
                                     <ul class="sub-menu">
                                         <li><a href="/shop">Boutique</a></li>
                                         <li><a href="/checkout">Paiement</a></li>
-                                        <li><a href="/single-product">Produit Unique</a></li>
+                                        <li><a href="/orders">Commandes</a></li>
                                         <li><a href="/cart">Panier</a></li>
                                     </ul>
                                 </li>

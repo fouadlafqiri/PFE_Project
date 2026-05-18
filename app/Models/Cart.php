@@ -31,6 +31,10 @@ class Cart extends Model
     {
         return $this->belongsTo(\Illuminate\Foundation\Auth\User::class, 'user_id', 'id');
     }
+    public function product()
+{
+    return $this->belongsTo(Product::class, 'idProduct', 'idProduct');
+}
 
     public function cartItems()
     {

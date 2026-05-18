@@ -65,6 +65,10 @@ Route::get('/products/{id}', [ProductController::class, 'show'])->name('products
 | Cart Routes (Guest & Authenticated)
 |--------------------------------------------------------------------------
 */
+Route::get('/cart', [CartController::class, 'index'])->name('cart');
+
+Route::post('/cart/coupon', [CartController::class, 'applyCoupon'])
+    ->name('cart.coupon');
 
 Route::prefix('cart')->name('cart.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');
@@ -124,7 +128,7 @@ Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
 
     // Dashboard & Profile
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
@@ -139,14 +143,26 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/products/{id}/toggle-status', [AdminProductController::class, 'toggleStatus'])->name('products.toggleStatus');
     Route::post('/products/{id}/toggle-featured', [AdminProductController::class, 'toggleFeatured'])->name('products.toggleFeatured');
 
-    // Orders
-    Route::prefix('orders')->name('orders.')->group(function () {
-        Route::get('/', [AdminOrderController::class, 'index'])->name('index');
-        Route::get('/{id}', [AdminOrderController::class, 'show'])->name('show');
-        Route::put('/{id}/status', [AdminOrderController::class, 'updateStatus'])->name('updateStatus');
-        Route::put('/{id}/payment-status', [AdminOrderController::class, 'updatePaymentStatus'])->name('updatePaymentStatus');
-        Route::delete('/{id}', [AdminOrderController::class, 'destroy'])->name('destroy');
-        Route::get('/{id}/invoice', [AdminOrderController::class, 'invoice'])->name('invoice');
+    // Orders (admin + livreur)
+    Route::middleware('isAdminOrLivreur')->group(function () {
+        Route::prefix('orders')->name('orders.')->group(function () {
+            Route::get('/', [AdminOrderController::class, 'index'])->name('index')->middleware('isAdminOrLivreur');
+            Route::get('/{id}', [AdminOrderController::class, 'show'])->name('show')->middleware('isAdminOrLivreur');
+            Route::put('/{id}/status', [AdminOrderController::class, 'updateStatus'])->name('updateStatus')->middleware('isAdminOrLivreur');
+            Route::put('/{id}/payment-status', [AdminOrderController::class, 'updatePaymentStatus'])->name('updatePaymentStatus')->middleware('isAdminOrLivreur');
+            Route::delete('/{id}', [AdminOrderController::class, 'destroy'])->name('destroy')->middleware('admin');
+            Route::get('/{id}/invoice', [AdminOrderController::class, 'invoice'])->name('invoice')->middleware('admin');
+        });
+
+        // Deliveries assign (admin + livreur)
+        Route::prefix('deliveries')->name('deliveries.')->group(function () {
+            Route::post('/assign-order', [DeliveryController::class, 'assignOrder'])->name('assign-order')->middleware('isAdminOrLivreur');
+        });
+
+        // Order Delivery Status Update (admin + livreur)
+        Route::put('/order-deliveries/{orderDelivery}/status', [DeliveryController::class, 'updateDeliveryStatus'])
+            ->name('orderDeliveries.updateStatus')
+            ->middleware('isAdminOrLivreur');
     });
 
     // Reviews
@@ -157,17 +173,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         Route::post('/{review}/toggle', [AdminReviewController::class, 'toggle'])->name('toggle');
     });
 
-    // Deliveries
-    Route::prefix('deliveries')->name('deliveries.')->group(function () {
+    // Deliveries (admin only)
+    Route::middleware('admin')->prefix('deliveries')->name('deliveries.')->group(function () {
         Route::get('/', [DeliveryController::class, 'index'])->name('index');
         Route::get('/create', [DeliveryController::class, 'create'])->name('create');
         Route::post('/', [DeliveryController::class, 'store'])->name('store');
         Route::get('/{delivery}/edit', [DeliveryController::class, 'edit'])->name('edit');
         Route::put('/{delivery}', [DeliveryController::class, 'update'])->name('update');
         Route::delete('/{delivery}', [DeliveryController::class, 'destroy'])->name('destroy');
-        Route::post('/assign-order', [DeliveryController::class, 'assignOrder'])->name('assign-order');
     });
-
-    // Order Delivery Status Update
-    Route::put('/order-deliveries/{orderDelivery}/status', [DeliveryController::class, 'updateDeliveryStatus'])->name('orderDeliveries.updateStatus');
 });
