@@ -22,6 +22,8 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
+        $remember = $request->has('remember');
+
         $user = User::where('email', $credentials['email'])->first();
 
         if ($user && !$this->isHashedPassword($user->password)) {
@@ -35,11 +37,13 @@ class AuthController extends Controller
             }
         }
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
             if (Auth::user()->role === 'admin') {
                 return redirect()->route('admin.dashboard');
+            } elseif (Auth::user()->role === 'livreur') {
+                return redirect()->route('admin.orders.index');
             }
 
             return redirect()->route('home');

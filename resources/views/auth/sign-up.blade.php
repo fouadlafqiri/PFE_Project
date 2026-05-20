@@ -1,105 +1,293 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.masterr')
 
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-	<meta name="author" content="AdminKit">
-	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+@section('title', 'Artisan - Inscription')
+@section('body-class', 'login-page')
 
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+@section('styles')
+    <style>
+        .login-page{
+            margin:0;
+            padding:0;
+            min-height:100vh;
+            background:
+                linear-gradient(rgba(5,25,34,0.82), rgba(5,25,34,0.82)),
+                url('{{ asset('assets/img/background/img-bg-1.avif') }}') center center/cover no-repeat;
+            position:relative;
+            font-family:'Poppins', sans-serif;
+        }
 
-	<link rel="canonical" href="https://demo-basic.adminkit.io/pages-sign-up.html" />
+        .login-overlay{
+            position:absolute;
+            inset:0;
+            background:rgba(0,0,0,0.65);
+            z-index:1;
+        }
 
-	<title>Sign Up | AdminKit Demo</title>
+        .login-container{
+            position:relative;
+            z-index:2;
+            min-height:calc(100vh - 120px);
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:120px 30px 60px;
+        }
 
-	<link href="css/app.css" rel="stylesheet">
-	<link rel="stylesheet" href="{{ asset('assets/css/all.min.css') }}">
-    <!-- bootstrap -->
-    <link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}">
-    <!-- owl carousel -->
-    <link rel="stylesheet" href="{{ asset('assets/css/owl.carousel.css') }}">
-    <!-- magnific popup -->
-    <link rel="stylesheet" href="{{ asset('assets/css/magnific-popup.css') }}">
-    <!-- animate css -->
-    <link rel="stylesheet" href="{{ asset('assets/css/animate.css') }}">
-    <!-- mean menu css -->
-    <link rel="stylesheet" href="{{ asset('assets/css/meanmenu.min.css') }}">
-    <!-- style principal -->
-    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
-    <!-- responsive -->
-    <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}">
-</head>
+        .login-box{
+            width:100%;
+            max-width:450px;
+            margin:0 auto;
+        }
 
-<body>
-	<main class="d-flex w-100">
-		<div class="container d-flex flex-column">
-			<div class="row vh-100">
-				<div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
-					<div class="d-table-cell align-middle">
+        .login-card{
+            background:rgba(255,255,255,0.08);
+            border:1px solid rgba(255,255,255,0.12);
+            backdrop-filter:blur(18px);
+            border-radius:24px;
+            padding:45px;
+            box-shadow:0 10px 40px rgba(0,0,0,0.45);
+        }
 
-						<div class="text-center mt-4">
-							<h1 class="h2">Get started</h1>
-							<p class="lead">
-								Start creating the best possible user experience for you customers.
-							</p>
-						</div>
+        .login-logo img{
+            width:150px;
+            filter:drop-shadow(0 5px 15px rgba(0,0,0,0.35));
+        }
 
-						<div class="card">
-							<div class="card-body">
-								<div class="m-sm-3">
-									<form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
-										@csrf
-										@if($errors->any())
-											<div class="alert alert-danger">
-												<ul class="mb-0">
-													@foreach($errors->all() as $error)
-														<li>{{ $error }}</li>
-													@endforeach
-												</ul>
-											</div>
-										@endif
-										<div class="mb-3">
-											<label class="form-label">Nom complet</label>
-											<input class="form-control form-control-lg" type="text" name="name" placeholder="Entrez votre nom" value="{{ old('name') }}" required />
-										</div>
-										<div class="mb-3">
-											<label class="form-label">Email</label>
-											<input class="form-control form-control-lg" type="email" name="email" placeholder="Entrez votre email" value="{{ old('email') }}" required />
-										</div>
-										<div class="mb-3">
-											<label class="form-label">Téléphone</label>
-											<input class="form-control form-control-lg" type="text" name="phone" placeholder="Entrez votre numéro" value="{{ old('phone') }}" />
-										</div>
-										<div class="mb-3">
-											<label class="form-label">Mot de passe</label>
-											<input class="form-control form-control-lg" type="password" name="password" placeholder="Entrez votre mot de passe" required />
-										</div>
-										<div class="mb-3">
-											<label class="form-label">Confirmez le mot de passe</label>
-											<input class="form-control form-control-lg" type="password" name="password_confirmation" placeholder="Confirmez le mot de passe" required />
-										</div>
-										<div class="d-grid gap-2 mt-3">
-											<button type="submit" class="btn btn-lg btn-primary">S'inscrire</button>
-										</div>
-									</form>
-								</div>
-							</div>
-						</div>
-						<div class="text-center mb-3">
-							Already have account? <a href="/login">Log In</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</main>
+        .login-subtitle{
+            color:#F28123;
+            letter-spacing:5px;
+            font-size:15px;
+            font-weight:600;
+        }
 
-	<script src="js/app.js"></script>
+        .login-title{
+            color:#ffffff;
+            font-size:52px;
+            font-weight:700;
+            margin-bottom:15px;
+        }
 
-</body>
+        .login-text{
+            color:#dcdcdc;
+            font-size:17px;
+        }
 
-</html>
+        .form-label{
+            color:#ffffff;
+            font-weight:500;
+            margin-bottom:10px;
+        }
+
+        .custom-input{
+            background:rgba(255,255,255,0.10);
+            border:1px solid rgba(255,255,255,0.15);
+            color:#fff;
+            height:58px;
+            border-radius:14px;
+            padding:15px 18px;
+            transition:0.3s;
+        }
+
+        .custom-input::placeholder{
+            color:#d0d0d0;
+        }
+
+        .custom-input:focus{
+            background:rgba(255,255,255,0.15);
+            border-color:#F28123;
+            box-shadow:0 0 0 4px rgba(242,129,35,0.15);
+            color:#fff;
+        }
+
+        .login-btn{
+            width:100%;
+            height:58px;
+            border:none;
+            border-radius:14px;
+            background:#F28123;
+            color:#fff;
+            font-size:17px;
+            font-weight:600;
+            transition:0.3s;
+        }
+
+        .login-btn:hover{
+            background:#ff9b47;
+            transform:translateY(-2px);
+            box-shadow:0 10px 20px rgba(242,129,35,0.35);
+        }
+
+        .register-link{
+            color:#F28123;
+            font-weight:600;
+            text-decoration:none;
+        }
+
+        .register-link:hover{
+            color:#fff;
+        }
+
+        @media(max-width:768px){
+            .login-title{
+                font-size:42px;
+            }
+            .login-card{
+                padding:30px;
+            }
+            .login-container{
+                padding:80px 20px 40px;
+            }
+        }
+    </style>
+@endsection
+
+@section('content1')
+    <div class="login-overlay"></div>
+    <main class="login-container">
+
+        <div class="login-box register-box">
+
+            <!-- Logo -->
+            <div class="login-logo">
+                <img src="{{ asset('assets/img/logo/logo_artisan.png') }}" alt="Logo">
+            </div>
+
+            <!-- Header -->
+            <div class="text-center mb-4">
+
+                <p class="login-subtitle">
+                    REJOIGNEZ NOTRE COMMUNAUTÉ
+                </p>
+
+                <h1 class="login-title">
+                    Créer un Compte
+                </h1>
+
+                <p class="login-text">
+                    Découvrez nos produits artisanaux authentiques
+                </p>
+
+            </div>
+
+            <!-- Card -->
+            <div class="login-card">
+
+                <form method="POST"
+                      action="{{ route('register') }}"
+                      enctype="multipart/form-data">
+
+                    @csrf
+
+                    @if($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <!-- Nom -->
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Nom complet
+                        </label>
+
+                        <input
+                            class="form-control custom-input"
+                            type="text"
+                            name="name"
+                            placeholder="Entrez votre nom"
+                            value="{{ old('name') }}"
+                            required
+                        />
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Adresse Email
+                        </label>
+
+                        <input
+                            class="form-control custom-input"
+                            type="email"
+                            name="email"
+                            placeholder="Entrez votre email"
+                            value="{{ old('email') }}"
+                            required
+                        />
+                    </div>
+
+                    <!-- Téléphone -->
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Téléphone
+                        </label>
+
+                        <input
+                            class="form-control custom-input"
+                            type="text"
+                            name="phone"
+                            placeholder="Entrez votre numéro"
+                            value="{{ old('phone') }}"
+                        />
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Mot de passe
+                        </label>
+
+                        <input
+                            class="form-control custom-input"
+                            type="password"
+                            name="password"
+                            placeholder="Entrez votre mot de passe"
+                            required
+                        />
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="mb-4">
+                        <label class="form-label">
+                            Confirmez le mot de passe
+                        </label>
+                        <input
+                            class="form-control custom-input"
+                            type="password"
+                            name="password_confirmation"
+                            placeholder="Confirmez votre mot de passe"
+                            required
+                        />
+                    </div>
+                    <!-- Button -->
+                    <div class="d-grid">
+                        <button type="submit" class="login-btn">
+                            Créer un compte
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- Login -->
+            <div class="text-center mt-4">
+
+                <span class="text-light">
+                    Vous avez déjà un compte ?
+                </span>
+
+                <a href="/login" class="register-link">
+                    Se connecter
+                </a>
+
+            </div>
+
+        </div>
+
+    </main>
+@endsection

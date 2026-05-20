@@ -10,9 +10,11 @@
             <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">
                 <i data-feather="arrow-left"></i> Retour
             </a>
-            <a href="{{ route('admin.orders.invoice', $order->idOrder) }}" class="btn btn-primary ms-2">
-                <i data-feather="file-text"></i> Facture
-            </a>
+            @if(auth()->user()->role === 'admin')
+                <a href="{{ route('admin.orders.invoice', $order->idOrder) }}" class="btn btn-primary ms-2">
+                    <i data-feather="file-text"></i> Facture
+                </a>
+            @endif
         </div>
     </div>
 
@@ -77,8 +79,60 @@
     </div>
 
     <div class="row g-3 mt-3">
-        <div class="col-md-12">
-            @include('admin.orders.delivery-form')
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Mettre à jour le statut de la commande</h5>
+                    @if(in_array(auth()->user()->role, ['admin', 'livreur']))
+                        <form action="{{ route('admin.orders.updateStatus', $order->idOrder) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <div class="mb-3">
+                                <label class="form-label">Statut</label>
+                                <select name="status" class="form-select" required>
+                                    <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>En attente</option>
+                                    <option value="processing" {{ $order->status === 'processing' ? 'selected' : '' }}>En cours</option>
+                                    <option value="shipped" {{ $order->status === 'shipped' ? 'selected' : '' }}>Expédiée</option>
+                                    <option value="delivered" {{ $order->status === 'delivered' ? 'selected' : '' }}>Livrée</option>
+                                    <option value="cancelled" {{ $order->status === 'cancelled' ? 'selected' : '' }}>Annulée</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-success">Mettre à jour le statut</button>
+                        </form>
+                    @else
+                        <p>Vous n'avez pas la permission de modifier le statut.</p>
+                    @endif
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Mettre à jour le statut de paiement</h5>
+                    @if(in_array(auth()->user()->role, ['admin', 'livreur']))
+                        <form action="{{ route('admin.orders.updatePaymentStatus', $order->idOrder) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <div class="mb-3">
+                                <label class="form-label">Statut de paiement</label>
+                                <select name="payment_status" class="form-select" required>
+                                    <option value="pending" {{ $order->payment_status === 'pending' ? 'selected' : '' }}>En attente</option>
+                                    <option value="paid" {{ $order->payment_status === 'paid' ? 'selected' : '' }}>Payé</option>
+                                    <option value="failed" {{ $order->payment_status === 'failed' ? 'selected' : '' }}>Échoué</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Mettre à jour le paiement</button>
+                        </form>
+                    @else
+                        <p>Vous n'avez pas la permission de modifier le statut de paiement.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            @if(auth()->user()->role === 'admin')
+                @include('admin.orders.delivery-form')
+            @endif
         </div>
     </div>
 @endsection

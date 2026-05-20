@@ -14,6 +14,10 @@ class AdminController extends Controller
 {
     public function index()
     {
+        if (auth()->user()->role === 'livreur') {
+            return redirect()->route('admin.orders.index');
+        }
+
         $stats = [
             'total_users'    => \Illuminate\Foundation\Auth\User::count(),
             'total_products' => Product::count(),

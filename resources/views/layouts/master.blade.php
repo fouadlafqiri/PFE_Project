@@ -31,7 +31,32 @@
     <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
     <!-- responsive -->
     <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}">
+    <style>
+        .button-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
+.button-container a,
+.button-container form {
+    padding: 8px 16px;
+    font-size: 14px;
+}
+
+.button-container a:hover,
+.button-container form:hover {
+    opacity: 0.8;
+}
+
+.button-container .admin-btn {
+    /* Add any specific styling for the admin button */
+}
+
+.button-container .logout-btn {
+    /* Add any specific styling for the logout button */
+}
+    </style>
 </head>
 
 <body>
@@ -89,59 +114,60 @@
                                         <li><a href="/cart">Panier</a></li>
                                     </ul>
                                 </li>
-                                <li>
-                                    <div class="header-icons">
-                                        <a class="shopping-cart" href="/cart"><i class="fas fa-shopping-cart"></i></a>
-                                        {{-- Profile Dropdown --}}
-                                        @guest
-                                            <a href="{{ route('login') }}" class="boxed-btn"
-                                                style="margin-left:10px; padding:8px 16px; font-size:14px;">Connexion</a>
-                                        @else
-                                            <div class="profile-wrap" style="position:relative; margin-left:10px;">
-                                                <button class="profile-trigger" onclick="toggleProfileDrop(event)">
-                                                    @if (Auth::user()->photo)
-                                                        <img src="{{ Auth::user()->photo }}" alt="avatar"
-                                                            style="width:40px;height:40px;border-radius:50%;object-fit:cover;" />
-                                                    @else
-                                                        <span class="avatar-initials"
-                                                            style="width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:#333;color:#fff;font-size:14px;">{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</span>
-                                                    @endif
-                                                    <span>{{ explode(' ', Auth::user()->name)[0] }}</span>
-                                                    <i class="fas fa-chevron-down"></i>
-                                                </button>
-                                                <div class="profile-drop" id="profileDrop">
-                                                    <div class="profile-drop-header">
-                                                        <strong>{{ Auth::user()->name }}</strong>
-                                                        <small>{{ Auth::user()->email }}</small>
-                                                        @if (Auth::user()->phone)
-                                                            <small>{{ Auth::user()->phone }}</small>
-                                                        @endif
-                                                    </div>
-                                                    {{-- Admin only button --}}
-                                                    @if (Auth::user()->role === 'admin')
-                                                        <a href="{{ route('admin.dashboard') }}" class="admin-btn">
-                                                            <i class="fas fa-gauge"></i> Dashboard Admin
-                                                        </a>
-                                                        <div class="drop-divider"></div>
-                                                    @endif
-                                                    <a href="{{ route('profile') }}"><i class="fas fa-user-pen"></i> Mon
-                                                        profil</a>
-                                                    <a href="{{ route('orders.index') }}"><i class="fas fa-box"></i> Mes
-                                                        commandes</a>
-                                                    <div class="drop-divider"></div>
-                                                    <form method="POST" action="{{ route('logout') }}">
-                                                        @csrf
-                                                        <button type="submit" class="logout-btn">
-                                                            <i class="fas fa-right-from-bracket"></i> Déconnexion
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        @endguest
-                                    </div>
-                                </li>
                             </ul>
                         </nav>
+
+                        <div class="header-actions">
+                            <div class="header-icons">
+                                <a class="shopping-cart" href="/cart"><i class="fas fa-shopping-cart"></i></a>
+                                {{-- Profile Dropdown --}}
+                                @guest
+                                    <a href="{{ route('login') }}" class="boxed-btn"
+                                        style="margin-left:10px; padding:8px 16px; font-size:14px;">Connexion</a>
+                                @else
+                                    <div class="profile-wrap" style="position:relative; margin-left:10px;">
+                                        <button type="button" class="profile-trigger" onclick="toggleProfileDrop(event)">
+                                            @if (Auth::user()->photo)
+                                                <img src="{{ Auth::user()->photo }}" alt="avatar"
+                                                    style="width:40px;height:40px;border-radius:50%;object-fit:cover;" />
+                                            @else
+                                                <span class="avatar-initials"
+                                                    style="width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:#333;color:#fff;font-size:14px;">{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</span>
+                                            @endif
+                                            <span>{{ explode(' ', Auth::user()->name)[0] }}</span>
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                        <div class="profile-drop" id="profileDrop">
+                                            <div class="profile-drop-header">
+                                                <strong>{{ Auth::user()->name }}</strong>
+                                                <small>{{ Auth::user()->email }}</small>
+                                                @if (Auth::user()->phone)
+                                                    <small>{{ Auth::user()->phone }}</small>
+                                                @endif
+                                            </div>
+                                            {{-- Admin only button --}}
+                                            @if (Auth::user()->role === 'admin')
+                                                <a href="{{ route('admin.dashboard') }}" class="admin-btn">
+                                                    <i class="fas fa-gauge"></i> Dashboard Admin
+                                                </a>
+                                                <div class="drop-divider"></div>
+                                            @endif
+                                            <a href="{{ route('profile') }}"><i class="fas fa-user-pen"></i> Mon
+                                                profil</a>
+                                            <a href="{{ route('orders.index') }}"><i class="fas fa-box"></i> Mes
+                                                commandes</a>
+                                            <div class="drop-divider"></div>
+                                            <form method="POST" action="{{ route('logout') }}">
+                                                @csrf
+                                                <button type="submit" class="logout-btn">
+                                                    <i class="fas fa-right-from-bracket"></i> Déconnexion
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                @endguest
+                            </div>
+                        </div>
 
                         <a class="mobile-show search-bar-icon" href="#"><i class="fas fa-search"></i></a>
 
@@ -220,7 +246,9 @@
     <!-- fin slider page d'accueil -->
     {{-- yield for the content --}}
 
+    <div class="main-content">
     @yield('content')
+</div>
 
 
 
@@ -319,17 +347,29 @@
     <script src="{{ asset('assets/js/sticker.js') }}"></script>
     <!-- main js -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
+    <script>
+        window.toggleProfileDrop = function(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            var wrap = e && e.currentTarget ? e.currentTarget.closest('.profile-wrap') : document.querySelector('.profile-wrap');
+            if (wrap) {
+                wrap.classList.toggle('open');
+            }
+        };
 
+        document.addEventListener('click', function() {
+            var w = document.querySelector('.profile-wrap.open');
+            if (w) w.classList.remove('open');
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.profile-trigger').forEach(function(btn) {
+                btn.style.cursor = 'pointer';
+            });
+        });
+    </script>
 </body>
-<script>
-    function toggleProfileDrop(e) {
-        e.stopPropagation();
-        document.querySelector('.profile-wrap').classList.toggle('open');
-    }
-    document.addEventListener('click', function() {
-        var w = document.querySelector('.profile-wrap');
-        if (w) w.classList.remove('open');
-    });
-</script>
 
 </html>

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Delivery;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -14,6 +16,17 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $query = Order::with('user')->orderBy('created_at', 'desc');
+
+        if (Auth::user()->role === 'livreur') {
+            $deliveryId = $this->getLivreurDeliveryId();
+            if ($deliveryId) {
+                $query->whereHas('orderDeliveries', function ($q) use ($deliveryId) {
+                    $q->where('delivery_id', $deliveryId);
+                });
+            } else {
+                $query->whereRaw('0 = 1');
+            }
+        }
 
         // Filter by status
         if ($request->has('status') && $request->status != '') {
@@ -37,14 +50,25 @@ class OrderController extends Controller
 
         $orders = $query->paginate(20);
 
-        // Get order statistics
+        $statsQuery = Order::query();
+        if (Auth::user()->role === 'livreur') {
+            $deliveryId = $this->getLivreurDeliveryId();
+            if ($deliveryId) {
+                $statsQuery->whereHas('orderDeliveries', function ($q) use ($deliveryId) {
+                    $q->where('delivery_id', $deliveryId);
+                });
+            } else {
+                $statsQuery->whereRaw('0 = 1');
+            }
+        }
+
         $stats = [
-            'total' => Order::count(),
-            'pending' => Order::where('status', 'pending')->count(),
-            'processing' => Order::where('status', 'processing')->count(),
-            'shipped' => Order::where('status', 'shipped')->count(),
-            'delivered' => Order::where('status', 'delivered')->count(),
-            'cancelled' => Order::where('status', 'cancelled')->count(),
+            'total' => $statsQuery->count(),
+            'pending' => (clone $statsQuery)->where('status', 'pending')->count(),
+            'processing' => (clone $statsQuery)->where('status', 'processing')->count(),
+            'shipped' => (clone $statsQuery)->where('status', 'shipped')->count(),
+            'delivered' => (clone $statsQuery)->where('status', 'delivered')->count(),
+            'cancelled' => (clone $statsQuery)->where('status', 'cancelled')->count(),
         ];
 
         return view('admin.orders.index', compact('orders', 'stats'));
@@ -55,7 +79,9 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $order = Order::with(['user', 'orderItems.product'])->findOrFail($id);
+        $order = Order::with(['user', 'orderItems.product', 'orderDeliveries.delivery'])->findOrFail($id);
+        $this->authorizeOrderForLivreur($order);
+
         return view('admin.orders.show', compact('order'));
     }
 
@@ -69,6 +95,8 @@ class OrderController extends Controller
         ]);
 
         $order = Order::findOrFail($id);
+        $this->authorizeOrderForLivreur($order);
+
         $oldStatus = $order->status;
 
         // If cancelling order, restore stock
@@ -105,6 +133,7 @@ class OrderController extends Controller
         ]);
 
         $order = Order::findOrFail($id);
+        $this->authorizeOrderForLivreur($order);
 
         $oldPaymentStatus = $order->payment_status;
         $order->payment_status = $validated['payment_status'];
@@ -117,6 +146,34 @@ class OrderController extends Controller
         $order->save();
 
         return back()->with('success', 'Payment status updated successfully!');
+    }
+
+    /**
+     * Get the delivery id for the current livreur user.
+     */
+    private function getLivreurDeliveryId()
+    {
+        if (Auth::user()->role !== 'livreur') {
+            return null;
+        }
+
+        $delivery = Delivery::where('email', Auth::user()->email)->first();
+        return $delivery ? $delivery->idDelivery : null;
+    }
+
+    /**
+     * Ensure the current livreur can manage this order.
+     */
+    private function authorizeOrderForLivreur(Order $order)
+    {
+        if (Auth::user()->role !== 'livreur') {
+            return;
+        }
+
+        $deliveryId = $this->getLivreurDeliveryId();
+        if (!$deliveryId || !$order->orderDeliveries()->where('delivery_id', $deliveryId)->exists()) {
+            abort(403, 'Accès interdit.');
+        }
     }
 
     /**

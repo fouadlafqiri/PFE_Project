@@ -16,6 +16,10 @@ public function handle(Request $request, Closure $next)
         return $next($request);
     }
 
+    if (Auth::check() && Auth::user()->role === 'livreur') {
+        return redirect()->route('admin.orders.index');
+    }
+
     return redirect()->route('home');
 }
 }

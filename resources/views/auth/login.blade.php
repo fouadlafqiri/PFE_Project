@@ -1,98 +1,205 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.masterr')
 
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-	<meta name="author" content="AdminKit">
-	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+@section('title', 'Artisan - Connexion')
+@section('body-class', 'login-page')
 
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+@section('styles')
+    <style>
+        /* LOGIN PAGE */
+        .login-page{
+            margin:0;
+            padding:0;
+            min-height:100vh;
+            background:
+                linear-gradient(rgba(5,25,34,0.72), rgba(5,25,34,0.72)),
+                url('{{ asset('assets/img/background/img-bg-1.avif') }}') center center/cover no-repeat;
+            position:relative;
+            font-family:'Poppins', sans-serif;
+        }
 
-	<link rel="canonical" href="https://demo-basic.adminkit.io/pages-sign-in.html" />
+        /* OVERLAY */
+        .login-overlay{
+            position:absolute;
+            inset:0;
+            background:rgba(0,0,0,0.65);
+            z-index:1;
+        }
 
-	<title>Sign In | AdminKit Demo</title>
-    <link rel="stylesheet" href="{{ asset('assets/css/all.min.css') }}">
-    <!-- bootstrap -->
-    <link rel="stylesheet" href="{{ asset('assets/bootstrap/css/bootstrap.min.css') }}">
-    <!-- owl carousel -->
-    <link rel="stylesheet" href="{{ asset('assets/css/owl.carousel.css') }}">
-    <!-- magnific popup -->
-    <link rel="stylesheet" href="{{ asset('assets/css/magnific-popup.css') }}">
-    <!-- animate css -->
-    <link rel="stylesheet" href="{{ asset('assets/css/animate.css') }}">
-    <!-- mean menu css -->
-    <link rel="stylesheet" href="{{ asset('assets/css/meanmenu.min.css') }}">
-    <!-- style principal -->
-    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
-    <!-- responsive -->
-    <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}">
-	<link href="css/app.css" rel="stylesheet">
-</head>
+        /* CONTAINER */
+        .login-container{
+            position:relative;
+            z-index:2;
+            min-height:calc(100vh - 120px);
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:120px 30px 60px;
+        }
 
-<body>
-	<main class="d-flex w-100">
-		<div class="container d-flex flex-column">
-			<div class="row vh-100">
-				<div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
-					<div class="d-table-cell align-middle">
+        /* BOX */
+        .login-box{
+            width:100%;
+            max-width:450px;
+            margin:0 auto;
+        }
 
-						<div class="text-center mt-4">
-							<h1 class="h2">Welcome back!</h1>
-							<p class="lead">
-								Sign in to your account to continue
-							</p>
-						</div>
+        /* CARD */
+        .login-card{
+            background:rgba(255,255,255,0.08);
+            backdrop-filter:blur(10px);
+            border:1px solid rgba(255,255,255,0.15);
+            padding:40px;
+            border-radius:20px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.3);
+        }
 
-						<div class="card">
-							<div class="card-body">
-								<div class="m-sm-3">
-									<form method="POST" action="{{ route('login') }}">
-										@csrf
-										@if($errors->any())
-											<div class="alert alert-danger">
-												<ul class="mb-0">
-													@foreach($errors->all() as $error)
-														<li>{{ $error }}</li>
-													@endforeach
-												</ul>
-											</div>
-										@endif
-										<div class="mb-3">
-											<label class="form-label">Email</label>
-											<input class="form-control form-control-lg" type="email" name="email" placeholder="Enter your email" value="{{ old('email') }}" required />
-										</div>
-										<div class="mb-3">
-											<label class="form-label">Password</label>
-											<input class="form-control form-control-lg" type="password" name="password" placeholder="Enter your password" />
-										</div>
-										<div>
-											<div class="form-check align-items-center">
-												<input id="customControlInline" type="checkbox" class="form-check-input" value="remember-me" name="remember-me" checked>
-												<label class="form-check-label text-small" for="customControlInline">Remember me</label>
-											</div>
-										</div>
-										<div class="d-grid gap-2 mt-3">
-											<button type="submit" class="btn btn-lg btn-primary">Se connecter</button>
-										</div>
-									</form>
-								</div>
-							</div>
-						</div>
-						<div class="text-center mb-3">
-							Don't have an account? <a href="/register">Sign up</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</main>
+        .login-logo{
+            text-align:center;
+            margin-bottom:20px;
+        }
 
-	<script src="js/app.js"></script>
+        .login-logo img{
+            max-width:120px;
+        }
 
-</body>
+        .login-subtitle{
+            color:#F28123;
+            letter-spacing:5px;
+            font-size:14px;
+            font-weight:600;
+            margin-bottom:10px;
+        }
 
-</html>
+        .login-title{
+            color:#fff;
+            font-size:42px;
+            font-weight:700;
+            margin-bottom:10px;
+        }
+
+        .login-text{
+            color:#ddd;
+            font-size:16px;
+        }
+
+        .form-label{
+            color:#fff;
+            margin-bottom:10px;
+            font-weight:500;
+        }
+
+        .custom-input{
+            height:55px;
+            border:none;
+            border-radius:12px;
+            padding:15px;
+            background:rgba(255,255,255,0.1);
+            color:#fff;
+            font-size:15px;
+        }
+
+        .custom-input::placeholder{
+            color:#ccc;
+        }
+
+        .custom-input:focus{
+            background:rgba(255,255,255,0.15);
+            color:#fff;
+            box-shadow:none;
+            border:1px solid #F28123;
+        }
+
+        .form-check-label{
+            color:#ddd;
+        }
+
+        .login-btn{
+            height:55px;
+            border:none;
+            border-radius:12px;
+            background:#F28123;
+            color:#fff;
+            font-size:16px;
+            font-weight:600;
+            transition:0.3s;
+        }
+
+        .login-btn:hover{
+            background:#051922;
+        }
+
+        .register-link{
+            color:#F28123;
+            font-weight:600;
+            text-decoration:none;
+        }
+
+        .register-link:hover{
+            color:#fff;
+        }
+
+        @media(max-width:768px){
+            .login-title{
+                font-size:34px;
+            }
+
+            .login-card{
+                padding:30px;
+            }
+
+            .login-container{
+                padding:80px 20px 40px;
+            }
+        }
+    </style>
+@endsection
+
+@section('content1')
+    <div class="login-overlay"></div>
+    <main class="login-container">
+        <div class="login-box">
+            <div class="login-logo">
+                <img src="{{ asset('assets/img/logo/logo_artisan.png') }}" alt="Logo">
+            </div>
+            <div class="text-center mb-4">
+                <p class="login-subtitle">FAIT MAIN & AUTHENTIQUE</p>
+                <h1 class="login-title">Bon Retour</h1>
+                <p class="login-text">Connectez-vous à votre compte</p>
+            </div>
+            <div class="login-card">
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+                    @if($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    <div class="mb-3">
+                        <label class="form-label">Adresse Email</label>
+                        <input class="form-control custom-input" type="email" name="email" placeholder="Entrer votre email" value="{{ old('email') }}" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mot de passe</label>
+                        <input class="form-control custom-input" type="password" name="password" placeholder="Entrer votre mot de passe" required />
+                    </div>
+                    <div class="form-check mb-4">
+                        <input id="remember" type="checkbox" class="form-check-input" name="remember">
+                        <label class="form-check-label" for="remember">Se souvenir de moi</label>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="login-btn">Se connecter</button>
+                    </div>
+                </form>
+            </div>
+            <div class="text-center mt-4">
+                <span class="text-light">Vous n'avez pas de compte ?</span>
+                <a href="/register" class="register-link">S'inscrire</a>
+            </div>
+        </div>
+    </main>
+@endsection
+

@@ -8,7 +8,7 @@
     <meta name="description" content=".............">
 
     <!-- titre -->
-    <title>E-commerce website</title>
+    <title>@yield('title', 'Artisan')</title>
 
     <!-- favicon -->
     <link rel="shortcut icon" type="image/png" href="{{ asset('assets/img/logo.png') }}">
@@ -32,9 +32,10 @@
     <!-- responsive -->
     <link rel="stylesheet" href="{{ asset('assets/css/responsive.css') }}">
 
+    @yield('styles')
 </head>
 
-<body>
+<body class="@yield('body-class')">
 
     <!--PreLoader-->
     <div class="loader">
@@ -97,7 +98,7 @@
                 <a href="{{ route('login') }}" class="boxed-btn" style="margin-left:10px; padding:8px 16px; font-size:14px;">Connexion</a>
                 @else
                 <div class="profile-wrap" style="position:relative; margin-left:10px;">
-                    <button class="profile-trigger" onclick="toggleProfileDrop(event)">
+                    <button type="button" class="profile-trigger" onclick="toggleProfileDrop(event)">
                         @if(Auth::user()->photo)
                             <img src="{{ Auth::user()->photo }}" alt="avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;" />
                         @else
@@ -253,7 +254,6 @@
     <!-- main js -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
-</body>
 <script>
 function toggleProfileDrop(e) {
     e.stopPropagation();
@@ -264,3 +264,4 @@ document.addEventListener('click', function() {
     if (w) w.classList.remove('open');
 });
 </script>
+</body>

@@ -130,19 +130,21 @@
                             </td>
                             <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
                             <td>
-                                <a href="{{ route('admin.orders.show', $order->idOrder) }}" class="btn btn-sm btn-primary me-1">
+                                <a href="{{ route('admin.orders.show', $order->idOrder) }}" class="btn btn-sm btn-primary me-1" title="Voir la commande">
                                     <i data-feather="eye"></i>
                                 </a>
-                                <a href="{{ route('admin.orders.invoice', $order->idOrder) }}" class="btn btn-sm btn-secondary me-1">
-                                    <i data-feather="file-text"></i>
-                                </a>
-                                <form action="{{ route('admin.orders.destroy', $order->idOrder) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Supprimer cette commande ?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i data-feather="trash-2"></i>
-                                    </button>
-                                </form>
+                                @if(auth()->user()->role === 'admin')
+                                    <a href="{{ route('admin.orders.invoice', $order->idOrder) }}" class="btn btn-sm btn-secondary me-1" title="Facture">
+                                        <i data-feather="file-text"></i>
+                                    </a>
+                                    <form action="{{ route('admin.orders.destroy', $order->idOrder) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Supprimer cette commande ?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i data-feather="trash-2"></i>
+                                        </button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                     @empty

@@ -23,26 +23,28 @@
 
                 <ul class="sidebar-nav">
 
-                    <li class="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                        <a class="sidebar-link" href="{{ route('admin.dashboard') }}">
-                            <i class="align-middle" data-feather="sliders"></i>
-                            <span class="align-middle">Dashboard</span>
-                        </a>
-                    </li>
+                    @if(auth()->user()->role === 'admin')
+                        <li class="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                            <a class="sidebar-link" href="{{ route('admin.dashboard') }}">
+                                <i class="align-middle" data-feather="sliders"></i>
+                                <span class="align-middle">Dashboard</span>
+                            </a>
+                        </li>
 
-                    <li class="sidebar-item {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
-                        <a class="sidebar-link" href="{{ route('admin.products.index') }}">
-                            <i class="align-middle" data-feather="package"></i>
-                            <span class="align-middle">Produits</span>
-                        </a>
-                    </li>
+                        <li class="sidebar-item {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
+                            <a class="sidebar-link" href="{{ route('admin.products.index') }}">
+                                <i class="align-middle" data-feather="package"></i>
+                                <span class="align-middle">Produits</span>
+                            </a>
+                        </li>
 
-                    <li class="sidebar-item {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
-                        <a class="sidebar-link" href="{{ route('admin.categories.index') }}">
-                            <i class="align-middle" data-feather="grid"></i>
-                            <span class="align-middle">Catégories</span>
-                        </a>
-                    </li>
+                        <li class="sidebar-item {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                            <a class="sidebar-link" href="{{ route('admin.categories.index') }}">
+                                <i class="align-middle" data-feather="grid"></i>
+                                <span class="align-middle">Catégories</span>
+                            </a>
+                        </li>
+                    @endif
 
                     <li class="sidebar-item {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
                         <a class="sidebar-link" href="{{ route('admin.orders.index') }}">
@@ -51,19 +53,21 @@
                         </a>
                     </li>
 
-                    <li class="sidebar-item {{ request()->routeIs('admin.deliveries.*') ? 'active' : '' }}">
-                        <a class="sidebar-link" href="{{ route('admin.deliveries.index') }}">
-                            <i class="align-middle" data-feather="truck"></i>
-                            <span class="align-middle">Livreurs</span>
-                        </a>
-                    </li>
+                    @if(auth()->user()->role === 'admin')
+                        <li class="sidebar-item {{ request()->routeIs('admin.deliveries.*') ? 'active' : '' }}">
+                            <a class="sidebar-link" href="{{ route('admin.deliveries.index') }}">
+                                <i class="align-middle" data-feather="truck"></i>
+                                <span class="align-middle">Livreurs</span>
+                            </a>
+                        </li>
 
-                    <li class="sidebar-item {{ request()->routeIs('admin.profile') ? 'active' : '' }}">
-                        <a class="sidebar-link" href="{{ route('admin.profile') }}">
-                            <i class="align-middle" data-feather="user"></i>
-                            <span class="align-middle">Profil</span>
-                        </a>
-                    </li>
+                        <li class="sidebar-item {{ request()->routeIs('admin.profile') ? 'active' : '' }}">
+                            <a class="sidebar-link" href="{{ route('admin.profile') }}">
+                                <i class="align-middle" data-feather="user"></i>
+                                <span class="align-middle">Profil</span>
+                            </a>
+                        </li>
+                    @endif
 
                 </ul>
             </div>
@@ -86,10 +90,12 @@
                                 <span class="text-dark">{{ auth()->user()->name ?? 'Admin' }}</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
-                                <a class="dropdown-item" href="{{ route('admin.profile') }}">
-                                    <i class="align-middle me-1" data-feather="user"></i> Profil
-                                </a>
-                                <div class="dropdown-divider"></div>
+                                @if(auth()->user()->role === 'admin')
+                                    <a class="dropdown-item" href="{{ route('admin.profile') }}">
+                                        <i class="align-middle me-1" data-feather="user"></i> Profil
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                @endif
                                 <form action="{{ route('logout') }}" method="POST">
                                     @csrf
                                     <button type="submit" class="dropdown-item">
