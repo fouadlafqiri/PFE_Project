@@ -4,11 +4,11 @@
 
 <div class="row">
     <div class="col-md-8">
-        <h1 class="h3 mb-3"><strong>Modifier le Livreur: {{ $delivery->name }}</strong></h1>
+        <h1 class="h3 mb-3"><strong>{{ isset($selfMode) && $selfMode ? 'Mon profil de livreur' : 'Modifier le Livreur: ' . $delivery->name }}</strong></h1>
 
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('admin.deliveries.update', $delivery->idDelivery) }}" method="POST">
+                <form action="{{ $actionUrl ?? route('admin.deliveries.update', $delivery->idDelivery) }}" method="POST">
                     @csrf
                     @method('PUT')
 
@@ -96,7 +96,7 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="align-middle me-1" data-feather="check"></i> Mettre à Jour
                         </button>
-                        <a href="{{ route('admin.deliveries.index') }}" class="btn btn-secondary">
+                        <a href="{{ $cancelUrl ?? route('admin.deliveries.index') }}" class="btn btn-secondary">
                             <i class="align-middle me-1" data-feather="x"></i> Annuler
                         </a>
                     </div>

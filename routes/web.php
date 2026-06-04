@@ -131,9 +131,11 @@ Route::get('/news/{id}', [NewsController::class, 'show'])->name('news.show');
 
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
 
-    // Dashboard & Profile
+    // Dashboard
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
-    Route::middleware('admin')->group(function () {
+
+    // Admin and livreur profile
+    Route::middleware('isAdminOrLivreur')->group(function () {
         Route::get('/profile', [AdminController::class, 'profile'])->name('profile');
         Route::put('/profile', [AdminController::class, 'updateProfile'])->name('profile.update');
     });
@@ -165,6 +167,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
             Route::delete('/{delivery}', [DeliveryController::class, 'destroy'])->name('destroy');
             Route::post('/assign-order', [DeliveryController::class, 'assignOrder'])->name('assign-order');
             Route::put('/order-deliveries/{orderDelivery}/status', [DeliveryController::class, 'updateDeliveryStatus'])->name('updateDeliveryStatus');
+        });
+
+        // Livreurs can edit their own profile and status
+        Route::middleware('isAdminOrLivreur')->prefix('deliveries')->name('deliveries.')->group(function () {
+            Route::get('/me/edit', [DeliveryController::class, 'editSelf'])->name('me.edit');
+            Route::put('/me', [DeliveryController::class, 'updateSelf'])->name('me.update');
         });
     });
 

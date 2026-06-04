@@ -47,19 +47,66 @@ class AdminController extends Controller
     public function profile()
     {
         $user = auth()->user();
-        return view('admin.profile', compact('user'));
+        $delivery = null;
+
+        if ($user->role === 'livreur') {
+            $delivery = \App\Models\Delivery::where('email', $user->email)->first();
+        }
+
+        return view('admin.profile', compact('user', 'delivery'));
     }
 
     public function updateProfile(Request $request)
     {
         $user = auth()->user();
+        $delivery = null;
 
-        $request->validate([
+        if ($user->role === 'livreur') {
+            $delivery = \App\Models\Delivery::where('email', $user->email)->first();
+        }
+
+        $rules = [
             'name'  => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone' => 'nullable|string|max:20',
+        ];
+
+        if ($user->role === 'livreur') {
+            $rules['status'] = 'required|in:active,inactive,on_delivery';
+            $rules['vehicle_type'] = 'required|in:bike,car,truck';
+            $rules['vehicle_number'] = 'nullable|string|max:50';
+
+            if ($delivery) {
+                $rules['email'] .= '|unique:deliveries,email,' . $delivery->idDelivery . ',idDelivery';
+            } else {
+                $rules['email'] .= '|unique:deliveries,email';
+            }
+        }
+
+        $validated = $request->validate($rules);
+
+        $user->update([
+            'name'  => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? $user->phone,
         ]);
 
-        $user->update($request->only('name', 'email'));
+        if ($user->role === 'livreur') {
+            $deliveryData = [
+                'name'           => $validated['name'],
+                'email'          => $validated['email'],
+                'phone'          => $validated['phone'] ?? $delivery->phone ?? null,
+                'status'         => $validated['status'],
+                'vehicle_type'   => $validated['vehicle_type'],
+                'vehicle_number' => $validated['vehicle_number'] ?? ($delivery->vehicle_number ?? null),
+            ];
+
+            if ($delivery) {
+                $delivery->update($deliveryData);
+            } else {
+                \App\Models\Delivery::create($deliveryData);
+            }
+        }
 
         return back()->with('success', 'Profil mis à jour avec succès.');
     }

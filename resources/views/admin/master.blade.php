@@ -66,14 +66,14 @@
                                 <span class="align-middle">Livreurs</span>
                             </a>
                         </li>
-
-                        <li class="sidebar-item {{ request()->routeIs('admin.profile') ? 'active' : '' }}">
-                            <a class="sidebar-link" href="{{ route('admin.profile') }}">
-                                <i class="align-middle" data-feather="user"></i>
-                                <span class="align-middle">Profil</span>
-                            </a>
-                        </li>
                     @endif
+
+                    <li class="sidebar-item {{ request()->routeIs('admin.profile') ? 'active' : '' }}">
+                        <a class="sidebar-link" href="{{ route('admin.profile') }}">
+                            <i class="align-middle" data-feather="user"></i>
+                            <span class="align-middle">Profil</span>
+                        </a>
+                    </li>
 
                 </ul>
             </div>
@@ -96,12 +96,10 @@
                                 <span class="text-dark">{{ auth()->user()->name ?? 'Admin' }}</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
-                                @if(auth()->user()->role === 'admin')
-                                    <a class="dropdown-item" href="{{ route('admin.profile') }}">
-                                        <i class="align-middle me-1" data-feather="user"></i> Profil
-                                    </a>
-                                    <div class="dropdown-divider"></div>
-                                @endif
+                                <a class="dropdown-item" href="{{ route('admin.profile') }}">
+                                    <i class="align-middle me-1" data-feather="user"></i> Profil
+                                </a>
+                                <div class="dropdown-divider"></div>
                                 <form action="{{ route('logout') }}" method="POST">
                                     @csrf
                                     <button type="submit" class="dropdown-item">
@@ -157,5 +155,25 @@
     </div>
 
     <script src="{{ asset('assets/admin-dashboard/js/app.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const alerts = document.querySelectorAll('.alert.alert-dismissible.fade.show');
+            if (!alerts.length) {
+                return;
+            }
+
+            setTimeout(function () {
+                alerts.forEach(function (alert) {
+                    if (window.bootstrap && typeof window.bootstrap.Alert === 'function') {
+                        window.bootstrap.Alert.getOrCreateInstance(alert).close();
+                    } else {
+                        alert.classList.remove('show');
+                        alert.classList.add('hide');
+                        alert.remove();
+                    }
+                });
+            }, 3500);
+        });
+    </script>
 </body>
 </html>

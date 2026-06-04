@@ -77,6 +77,63 @@ class DeliveryController extends Controller
     }
 
     /**
+     * Show edit form for the current livreur
+     */
+    public function editSelf()
+    {
+        $delivery = $this->getCurrentDelivery();
+
+        return view('admin.deliveries.edit', [
+            'delivery' => $delivery,
+            'actionUrl' => route('admin.deliveries.me.update'),
+            'cancelUrl' => route('admin.orders.index'),
+            'selfMode' => true,
+        ]);
+    }
+
+    /**
+     * Update profile for the current livreur
+     */
+    public function updateSelf(Request $request)
+    {
+        $delivery = $this->getCurrentDelivery();
+        $user = auth()->user();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:deliveries,email,' . $delivery->idDelivery . ',idDelivery|unique:users,email,' . $user->id,
+            'phone' => 'required|string|max:20',
+            'address' => 'nullable|string|max:500',
+            'vehicle_type' => 'nullable|in:bike,car,truck',
+            'vehicle_number' => 'nullable|string|max:50',
+            'status' => 'required|in:active,inactive,on_delivery',
+        ]);
+
+        $delivery->update($validated);
+        $user->update([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+        ]);
+
+        return back()->with('success', 'Votre profil de livreur a été mis à jour avec succès.');
+    }
+
+    /**
+     * Get delivery record for the currently authenticated livreur
+     */
+    private function getCurrentDelivery()
+    {
+        $user = auth()->user();
+
+        if ($user->role !== 'livreur') {
+            abort(403);
+        }
+
+        return Delivery::where('email', $user->email)->firstOrFail();
+    }
+
+    /**
      * Delete delivery
      */
     public function destroy(Delivery $delivery)

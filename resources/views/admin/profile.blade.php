@@ -3,7 +3,7 @@
 @section('admin-content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h3 mb-0">Mon profil administrateur</h1>
+            <h1 class="h3 mb-0">{{ auth()->user()->role === 'livreur' ? 'Mon profil de livreur' : 'Mon profil administrateur' }}</h1>
             <p class="text-muted">Mettez à jour vos informations personnelles.</p>
         </div>
     </div>
@@ -66,6 +66,41 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
+
+                        @if(auth()->user()->role === 'livreur')
+                            <div class="mb-3">
+                                <label class="form-label">Statut</label>
+                                <select name="status" class="form-control @error('status') is-invalid @enderror" required>
+                                    <option value="active" {{ old('status', $delivery->status ?? '') === 'active' ? 'selected' : '' }}>Actif</option>
+                                    <option value="inactive" {{ old('status', $delivery->status ?? '') === 'inactive' ? 'selected' : '' }}>Inactif</option>
+                                    <option value="on_delivery" {{ old('status', $delivery->status ?? '') === 'on_delivery' ? 'selected' : '' }}>En cours de livraison</option>
+                                </select>
+                                @error('status')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Type de Véhicule *</label>
+                                <select name="vehicle_type" class="form-control @error('vehicle_type') is-invalid @enderror" required>
+                                    <option value="">Sélectionner...</option>
+                                    <option value="bike" {{ old('vehicle_type', $delivery->vehicle_type ?? '') === 'bike' ? 'selected' : '' }}>Motocyclette</option>
+                                    <option value="car" {{ old('vehicle_type', $delivery->vehicle_type ?? '') === 'car' ? 'selected' : '' }}>Voiture</option>
+                                    <option value="truck" {{ old('vehicle_type', $delivery->vehicle_type ?? '') === 'truck' ? 'selected' : '' }}>Camion</option>
+                                </select>
+                                @error('vehicle_type')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Numéro d'immatriculation</label>
+                                <input type="text" name="vehicle_number" class="form-control @error('vehicle_number') is-invalid @enderror" value="{{ old('vehicle_number', $delivery->vehicle_number ?? '') }}">
+                                @error('vehicle_number')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        @endif
 
                         <div class="mb-3">
                             <label class="form-label">Photo de profil</label>
