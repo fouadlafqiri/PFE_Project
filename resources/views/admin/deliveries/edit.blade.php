@@ -89,10 +89,7 @@
                             <label class="form-label">Commandes Complétées</label>
                             <input type="number" class="form-control" value="{{ $delivery->orders_completed }}" disabled>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Note</label>
-                            <input type="number" step="0.01" class="form-control" value="{{ $delivery->rating }}" disabled>
-                        </div>
+
                     </div>
 
                     <div class="d-flex gap-2">

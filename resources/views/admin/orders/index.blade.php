@@ -11,6 +11,7 @@
         </a>
     </div>
 
+
     <div class="row g-3 mb-4">
         <div class="col-sm-6 col-xl-2">
             <div class="card">
@@ -101,7 +102,7 @@
             <table class="table table-hover table-striped mb-0">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>ID</th>
                         <th>Commande</th>
                         <th>Client</th>
                         <th>Montant</th>

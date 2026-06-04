@@ -21,14 +21,13 @@
         <table class="table table-hover my-0">
             <thead>
                 <tr>
-                    <th>#ID</th>
+                    <th>ID</th>
                     <th>Nom</th>
                     <th>Email</th>
                     <th>Téléphone</th>
                     <th>Type Véhicule</th>
                     <th>Statut</th>
                     <th>Commandes</th>
-                    <th>Note</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -60,12 +59,6 @@
                             @endswitch
                         </td>
                         <td>{{ $delivery->orders_completed }}</td>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-star text-warning"></i>
-                                <span class="ms-1">{{ $delivery->rating }}</span>
-                            </div>
-                        </td>
                         <td>
                             <a href="{{ route('admin.deliveries.edit', $delivery->idDelivery) }}" class="btn btn-sm btn-warning">
                                 <i data-feather="edit"></i>

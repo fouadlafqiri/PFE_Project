@@ -44,6 +44,12 @@
                                 <span class="align-middle">Catégories</span>
                             </a>
                         </li>
+                        <li class="sidebar-item {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
+                            <a class="sidebar-link" href="{{ route('admin.reviews.index') }}">
+                                <i class="align-middle" data-feather="grid"></i>
+                                <span class="align-middle">Reviews</span>
+                            </a>
+                        </li>
                     @endif
 
                     <li class="sidebar-item {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
@@ -136,7 +142,12 @@
                             <p class="mb-0"><strong>Produit Artisanal</strong> &copy; {{ date('Y') }}</p>
                         </div>
                         <div class="col-6 text-end">
-                            <a href="{{ route('home') }}" class="text-muted">Voir le site</a>
+                            {{--  --}}
+                             @if(auth()->user()->role === 'admin')
+                                    <a href="{{ route('home') }}" class="text-muted">Voir le site</a>
+                                @endif
+                            {{--  --}}
+
                         </div>
                     </div>
                 </div>

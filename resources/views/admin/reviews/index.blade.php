@@ -1,6 +1,6 @@
-@extends('layouts.masterr')
+@extends('admin.master')
 
-@section('content1')
+@section('admin-content')
 
 <div class="breadcrumb-section breadcrumb-bg">
     <div class="container">
