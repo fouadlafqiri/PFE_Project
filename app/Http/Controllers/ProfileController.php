@@ -32,7 +32,7 @@ class ProfileController extends Controller
                 mkdir($uploadPath, 0755, true);
             }
             $photo->move($uploadPath, $photoName);
-            $data['photo'] = asset('uploads/profile_photos/' . $photoName);
+            $data['photo'] = 'uploads/profile_photos/' . $photoName;
         }
 
         $user->update($data);

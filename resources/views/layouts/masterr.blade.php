@@ -63,78 +63,81 @@
                         <!-- menu début -->
                         <nav class="main-menu">
                             <ul>
-                                <li class="current-list-item"><a href="/">Accueil</a>
+                                <li class="{{ request()->is('/') ? 'current-list-item' : '' }}"><a href="/">Accueil</a>
                                 </li>
-                                <li><a href="/products">Les produits</a></li>
-                                <li><a href="/about">À propos</a></li>
+                                <li class="{{ request()->is('products*') ? 'current-list-item' : '' }}"><a href="{{ route('products.index') }}">Les produits</a></li>
+                                <li class="{{ request()->is('about*') ? 'current-list-item' : '' }}"><a href="/about">À propos</a></li>
                                 {{-- <li><a href="#">Pages</a>
-									<ul class="sub-menu">
-										<li><a href="404.html">Page 404</a></li>
-										<li><a href="about.html">À propos</a></li>
-										<li><a href="cart.html">Panier</a></li>
-										<li><a href="checkout.html">Paiement</a></li>
-										<li><a href="contact.html">Contact</a></li>
-										<li><a href="news.html">Actualités</a></li>
-										<li><a href="shop.html">Boutique</a></li>
-									</ul>
-								</li> --}}
-                                <li><a href="/news">Actualités</a>
-
-                                </li>
-                                <li><a href="/contact">Contact</a></li>
-                                <li><a href="#">Boutique</a>
                                     <ul class="sub-menu">
-                                        <li><a href="/shop">Boutique</a></li>
-                                        <li><a href="/checkout">Paiement</a></li>
-                                        <li><a href="/orders">Commandes</a></li>
-                                        <li><a href="/cart">Panier</a></li>
+                                        <li><a href="404.html">Page 404</a></li>
+                                        <li><a href="about.html">À propos</a></li>
+                                        <li><a href="cart.html">Panier</a></li>
+                                        <li><a href="checkout.html">Paiement</a></li>
+                                        <li><a href="contact.html">Contact</a></li>
+                                        <li><a href="news.html">Actualités</a></li>
+                                        <li><a href="shop.html">Boutique</a></li>
+                                    </ul>
+                                </li> --}}
+                                <li class="{{ request()->is('news*') ? 'current-list-item' : '' }}"><a href="{{ route('news.index') }}">Actualités</a></li>
+                                <li class="{{ request()->is('contact*') ? 'current-list-item' : '' }}"><a href="{{ route('contact') }}">Contact</a></li>
+                                <li class="{{ request()->is('shop*') || request()->is('checkout*') || request()->is('orders*') || request()->is('cart*') ? 'current-list-item' : '' }}"><a href="#">Boutique</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="{{ route('shop.index') }}">Boutique</a></li>
+                                        <li><a href="{{ route('checkout.index') }}">Paiement</a></li>
+                                        <li><a href="{{ route('orders.index') }}">Commandes</a></li>
+                                        <li><a href="{{ route('cart.index') }}">Panier</a></li>
                                     </ul>
                                 </li>
                                 <li>
-                                <div class="header-icons">
-                                    <a class="shopping-cart" href="/cart"><i class="fas fa-shopping-cart"></i></a>
-                                    {{-- Profile Dropdown --}}
-                                    @guest
-                <a href="{{ route('login') }}" class="boxed-btn" style="margin-left:10px; padding:8px 16px; font-size:14px;">Connexion</a>
-                @else
-                <div class="profile-wrap" style="position:relative; margin-left:10px;">
-                    <button type="button" class="profile-trigger" onclick="toggleProfileDrop(event)">
-                        @if(Auth::user()->photo)
-                            <img src="{{ Auth::user()->photo }}" alt="avatar" style="width:40px;height:40px;border-radius:50%;object-fit:cover;" />
-                        @else
-                            <span class="avatar-initials" style="width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:#333;color:#fff;font-size:14px;">{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</span>
-                        @endif
-                        <span>{{ explode(' ', Auth::user()->name)[0] }}</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="profile-drop" id="profileDrop">
-            <div class="profile-drop-header">
-                <strong>{{ Auth::user()->name }}</strong>
-                <small>{{ Auth::user()->email }}</small>
-                @if(Auth::user()->phone)
-                    <small>{{ Auth::user()->phone }}</small>
-                @endif
-            </div>
-            {{-- Admin only button --}}
-            @if(Auth::user()->role === 'admin')
-                <a href="{{ route('admin.dashboard') }}" class="admin-btn">
-                    <i class="fas fa-gauge"></i> Dashboard Admin
-                </a>
-                <div class="drop-divider"></div>
-            @endif
-            <a href="{{ route('profile') }}"><i class="fas fa-user-pen"></i> Mon profil</a>
-            <a href="{{ route('orders.index') }}"><i class="fas fa-box"></i> Mes commandes</a>
-            <div class="drop-divider"></div>
-            <form method="POST" action="{{ route('logout') }}">
-            @csrf
-                <button type="submit" class="logout-btn">
-                    <i class="fas fa-right-from-bracket"></i> Déconnexion
-                </button>
-            </form>
-        </div>
-    </div>
-@endguest
-                                </div>
+                                 <div class="header-icons">
+                                <a class="shopping-cart" href="/cart"><i class="fas fa-shopping-cart"></i></a>
+                                {{-- Profile Dropdown --}}
+                                @guest
+                                    <a href="{{ route('login') }}" class="boxed-btn"
+                                        style="margin-left:10px; padding:8px 16px; font-size:14px;">Connexion</a>
+                                @else
+                                    <div class="profile-wrap" style="position:relative; margin-left:10px;">
+                                        <button type="button" class="profile-trigger" onclick="toggleProfileDrop(event)">
+                                            @if (Auth::user()->photo)
+                                                <img src="{{ Auth::user()->photo_url }}" alt="avatar"
+                                                    style="width:40px;height:40px;border-radius:50%;object-fit:cover;" />
+                                            @else
+                                                <span class="avatar-initials"
+                                                    style="width:40px;height:40px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:#333;color:#fff;font-size:14px;">{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</span>
+                                            @endif
+                                            <span>{{ explode(' ', Auth::user()->name)[0] }}</span>
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                        <div class="profile-drop" id="profileDrop">
+                                            <div class="profile-drop-header">
+                                                <strong>{{ Auth::user()->name }}</strong>
+                                                <small>{{ Auth::user()->email }}</small>
+                                                @if (Auth::user()->phone)
+                                                    <small>{{ Auth::user()->phone }}</small>
+                                                @endif
+                                            </div>
+                                            {{-- Admin only button --}}
+                                            @if (Auth::user()->role === 'admin')
+                                                <a href="{{ route('admin.dashboard') }}" class="admin-btn">
+                                                    <i class="fas fa-gauge"></i> Dashboard Admin
+                                                </a>
+                                                <div class="drop-divider"></div>
+                                            @endif
+                                            <a href="{{ route('profile') }}"><i class="fas fa-user-pen"></i> Mon
+                                                profil</a>
+                                            <a href="{{ route('orders.index') }}"><i class="fas fa-box"></i> Mes
+                                                commandes</a>
+                                            <div class="drop-divider"></div>
+                                            <form method="POST" action="{{ route('logout') }}">
+                                                @csrf
+                                                <button type="submit" class="logout-btn">
+                                                    <i class="fas fa-right-from-bracket"></i> Déconnexion
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                @endguest
+                            </div>
                             </li>
                             </ul>
                         </nav>
@@ -174,9 +177,12 @@
                     <div class="footer-box get-in-touch">
                         <h2 class="widget-title">Contactez-nous</h2>
                         <ul>
-                            <li>34/8, East Hukupara, Gifirtok, Sadan.</li>
-                            <li>support@fruitkha.com</li>
-                            <li>+00 111 222 3333</li>
+                            <li>Sidi Kacem
+                            Région Rabat-Salé-Kénitra
+                            Maroc
+                        </li>
+                            <li>fouadfaqiri@gmail.com</li>
+                            <li>+212653084412</li>
                         </ul>
                     </div>
                 </div>
@@ -193,13 +199,10 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <div class="footer-box subscribe">
-                        <h2 class="widget-title">S'abonner</h2>
-                        <p>Abonnez-vous à notre liste de diffusion pour recevoir les dernières mises à jour.</p>
-                        <form action="/index">
-                            <input type="email" placeholder="Email">
-                            <button type="submit"><i class="fas fa-paper-plane"></i></button>
-                        </form>
+                    <div class="footer-box support-widget">
+                        <h2 class="widget-title">Besoin d’aide ?</h2>
+                        <p>Notre équipe est disponible pour répondre à vos questions sur les produits, commandes et livraisons.</p>
+                        <a href="{{ route('contact') }}" class="btn btn-outline-secondary">Contactez-nous</a>
                     </div>
                 </div>
             </div>
@@ -255,13 +258,26 @@
     <script src="{{ asset('assets/js/main.js') }}"></script>
 
 <script>
-function toggleProfileDrop(e) {
-    e.stopPropagation();
-    document.querySelector('.profile-wrap').classList.toggle('open');
-}
-document.addEventListener('click', function() {
-    var w = document.querySelector('.profile-wrap');
-    if (w) w.classList.remove('open');
-});
-</script>
+        window.toggleProfileDrop = function(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            var wrap = e && e.currentTarget ? e.currentTarget.closest('.profile-wrap') : document.querySelector('.profile-wrap');
+            if (wrap) {
+                wrap.classList.toggle('open');
+            }
+        };
+
+        document.addEventListener('click', function() {
+            var w = document.querySelector('.profile-wrap.open');
+            if (w) w.classList.remove('open');
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.profile-trigger').forEach(function(btn) {
+                btn.style.cursor = 'pointer';
+            });
+        });
+    </script>
 </body>

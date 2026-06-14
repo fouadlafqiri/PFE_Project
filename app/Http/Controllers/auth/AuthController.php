@@ -89,7 +89,7 @@ class AuthController extends Controller
                 mkdir($uploadPath, 0755, true);
             }
             $photo->move($uploadPath, $photoName);
-            $userData['photo'] = asset('uploads/profile_photos/' . $photoName);
+            $userData['photo'] = 'uploads/profile_photos/' . $photoName;
         }
 
         $user = User::create($userData);

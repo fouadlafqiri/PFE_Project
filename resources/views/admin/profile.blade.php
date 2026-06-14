@@ -1,5 +1,10 @@
 @extends('admin.master')
 
+@php
+    /** @var \App\Models\User $user */
+    /** @var \App\Models\Delivery|null $delivery */
+@endphp
+@section('title', 'Artisana - Profil')
 @section('admin-content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
@@ -20,7 +25,7 @@
             <div class="card mb-4">
                 <div class="card-body text-center">
                     @if($user->photo)
-                        <img src="{{ $user->photo }}" class="rounded-circle mb-3" alt="Photo de profil" style="width:140px;height:140px;object-fit:cover;" />
+                        <img src="{{ $user->photo_url }}" class="rounded-circle mb-3" alt="Photo de profil" style="width:140px;height:140px;object-fit:cover;" />
                     @else
                         <div class="rounded-circle mb-3 d-flex align-items-center justify-content-center" style="width:140px;height:140px;background:#f0f0f0;color:#333;font-size:42px;">
                             {{ strtoupper(substr($user->name, 0, 2)) }}

@@ -1,4 +1,5 @@
 @extends('layouts.masterr')
+@section('title', 'Artisana - Commande confirmée')
 @section('content1')
 
 <div class="checkout-section mt-150 mb-150">

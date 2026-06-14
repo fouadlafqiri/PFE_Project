@@ -113,7 +113,25 @@ class ProductController extends Controller
         'is_active' => 'boolean',
     ]);
 
-    // image upload ...
+    // Handle image upload
+    if ($request->hasFile('imageProduct')) {
+        // Delete old image if it exists
+        if ($product->imageProduct && file_exists(public_path('images/products/'.$product->imageProduct))) {
+            unlink(public_path('images/products/'.$product->imageProduct));
+        }
+
+        // Save new image
+        $image = $request->file('imageProduct');
+        $imageName = time().'_'.$image->getClientOriginalName();
+        $dir = public_path('images/products');
+
+        if (!file_exists($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        $image->move($dir, $imageName);
+        $validated['imageProduct'] = $imageName;
+    }
 
     $product->update($validated);
 

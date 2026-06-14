@@ -1,4 +1,5 @@
 @extends('layouts.masterr')
+@section('title', 'Artisana - Paiement')
 @section('content1')
 
 <!--PreLoader-->

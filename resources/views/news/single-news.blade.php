@@ -1,5 +1,5 @@
 @extends('layouts.masterr')
-
+@section('title', 'Artisana - ' . $news->title)
 @section('content1')
 
 <!-- breadcrumb -->
@@ -83,7 +83,7 @@
                         <ul>
                             @foreach($latestProducts as $product)
                                 <li style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
-                                    <img src="{{ asset('assets/img/products/' . $product->imageProduct) }}"
+                                    <img src="{{ asset('images/products/' . $product->imageProduct)}}"
                                          alt="{{ $product->nameProduct }}"
                                          style="width:60px; height:60px; object-fit:cover; border-radius:4px;">
                                     <div>

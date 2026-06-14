@@ -26,7 +26,6 @@ class Cart extends Model
         'session_id',
     ];
 
-    // ✅ Fixed: was \App\User::class (doesn't exist in Laravel 8+)
     public function user()
     {
         return $this->belongsTo(\Illuminate\Foundation\Auth\User::class, 'user_id', 'id');

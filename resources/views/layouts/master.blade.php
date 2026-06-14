@@ -87,26 +87,26 @@
                         <!-- menu début -->
                         <nav class="main-menu">
                             <ul>
-                                <li class="current-list-item"><a href="/">Accueil</a>
+                                <li class="{{ request()->is('/') ? 'current-list-item' : '' }}"><a href="/">Accueil</a>
                                 </li>
-                                <li><a href="/products">Les produits</a></li>
-                                <li><a href="/about">À propos</a></li>
+                                <li class="{{ request()->is('products*') ? 'current-list-item' : '' }}"><a href="{{ route('products.index') }}">Les produits</a></li>
+                                <li class="{{ request()->is('about*') ? 'current-list-item' : '' }}"><a href="/about">À propos</a></li>
                                 {{-- <li><a href="#">Pages</a>
-									<ul class="sub-menu">
-										<li><a href="404.html">Page 404</a></li>
-										<li><a href="about.html">À propos</a></li>
-										<li><a href="cart.html">Panier</a></li>
-										<li><a href="checkout.html">Paiement</a></li>
-										<li><a href="contact.html">Contact</a></li>
-										<li><a href="news.html">Actualités</a></li>
-										<li><a href="shop.html">Boutique</a></li>
-									</ul>
-								</li> --}}
-                                <li><a href="/news">Actualités</a>
+                                    <ul class="sub-menu">
+                                        <li><a href="404.html">Page 404</a></li>
+                                        <li><a href="about.html">À propos</a></li>
+                                        <li><a href="cart.html">Panier</a></li>
+                                        <li><a href="checkout.html">Paiement</a></li>
+                                        <li><a href="contact.html">Contact</a></li>
+                                        <li><a href="news.html">Actualités</a></li>
+                                        <li><a href="shop.html">Boutique</a></li>
+                                    </ul>
+                                </li> --}}
+                                <li class="{{ request()->is('news*') ? 'current-list-item' : '' }}"><a href="/news">Actualités</a>
 
                                 </li>
-                                <li><a href="/contact">Contact</a></li>
-                                <li><a href="#">Boutique</a>
+                                <li class="{{ request()->is('contact*') ? 'current-list-item' : '' }}"><a href="/contact">Contact</a></li>
+                                <li class="{{ request()->is('shop*') || request()->is('checkout*') || request()->is('orders*') || request()->is('cart*') ? 'current-list-item' : '' }}"><a href="#">Boutique</a>
                                     <ul class="sub-menu">
                                         <li><a href="/shop">Boutique</a></li>
                                         <li><a href="/checkout">Paiement</a></li>
@@ -128,7 +128,7 @@
                                     <div class="profile-wrap" style="position:relative; margin-left:10px;">
                                         <button type="button" class="profile-trigger" onclick="toggleProfileDrop(event)">
                                             @if (Auth::user()->photo)
-                                                <img src="{{ Auth::user()->photo }}" alt="avatar"
+                                                <img src="{{ Auth::user()->photo_url }}" alt="avatar"
                                                     style="width:40px;height:40px;border-radius:50%;object-fit:cover;" />
                                             @else
                                                 <span class="avatar-initials"

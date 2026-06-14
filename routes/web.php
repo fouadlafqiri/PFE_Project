@@ -4,6 +4,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\NewsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
@@ -15,6 +16,8 @@ use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\NewsController as AdminNewsController;
+use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DeliveryController;
@@ -55,7 +58,7 @@ Route::middleware(['auth'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::get('/shop', [ProductController::class, 'index'])->name('shop.index');
+Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
 Route::get('/products/category/{id}', [ProductController::class, 'category'])->name('products.category');
@@ -157,6 +160,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
             Route::post('/{review}/toggle', [AdminReviewController::class, 'toggle'])->name('toggle');
         });
 
+        // Contact messages
+        Route::resource('contacts', AdminContactController::class)->only(['index', 'show']);
+
         // Deliveries (admin only)
         Route::prefix('deliveries')->name('deliveries.')->group(function () {
             Route::get('/', [DeliveryController::class, 'index'])->name('index');
@@ -168,6 +174,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
             Route::post('/assign-order', [DeliveryController::class, 'assignOrder'])->name('assign-order');
             Route::put('/order-deliveries/{orderDelivery}/status', [DeliveryController::class, 'updateDeliveryStatus'])->name('updateDeliveryStatus');
         });
+
+        // News management
+        Route::resource('news', AdminNewsController::class)->except(['show']);
 
         // Livreurs can edit their own profile and status
         Route::middleware('isAdminOrLivreur')->prefix('deliveries')->name('deliveries.')->group(function () {

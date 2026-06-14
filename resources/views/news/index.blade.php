@@ -1,5 +1,5 @@
 @extends('layouts.masterr')
-
+@section('title', 'Artisana - Actualités')
 @section('content1')
 
 <!-- breadcrumb-section -->
@@ -42,6 +42,7 @@
                             </span>
                         </p>
                         <p class="excerpt">{{ Str::limit($article->excerpt, 100) }}</p>
+                        <a href="{{ route('news.show', $article->idNews) }}" class="boxed-btn mt-3">Lire l'article</a>
                     </div>
                 </div>
             </div>
@@ -88,7 +89,7 @@
                     <form action="{{ route('cart.add', $product->idProduct) }}" method="POST">
                         @csrf
                         <input type="hidden" name="quantity" value="1">
-                        <button type="submit" class="cart-btn">
+                        <button type="submit" class="modern-cart-btn">
                             <i class="fas fa-shopping-cart"></i> Ajouter au Panier
                         </button>
                     </form>

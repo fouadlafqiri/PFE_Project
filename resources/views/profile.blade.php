@@ -1,5 +1,7 @@
 @extends('layouts.masterr')
 
+@section('title', 'Artisana - Profil')
+
 @section('content1')
 <div class="breadcrumb-section breadcrumb-bg">
 		<div class="container">
@@ -22,7 +24,7 @@
                 <div class="card mb-4">
                     <div class="card-body text-center">
                         @if(auth()->user()->photo)
-                            <img src="{{ auth()->user()->photo }}" class="rounded-circle mb-3" alt="Photo de profil" style="width:140px;height:140px;object-fit:cover;" />
+                            <img src="{{ auth()->user()->photo_url }}" class="rounded-circle mb-3" alt="Photo de profil" style="width:140px;height:140px;object-fit:cover;" />
                         @else
                             <div class="rounded-circle mb-3" style="width:140px;height:140px;display:flex;align-items:center;justify-content:center;background:#f0f0f0;color:#333;font-size:42px;">
                                 {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}

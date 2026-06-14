@@ -1,6 +1,6 @@
 @extends('layouts.masterr')
 
-@section('title', 'Artisan - Inscription')
+@section('title', 'Artisana - Inscription')
 @section('body-class', 'login-page')
 
 @section('styles')

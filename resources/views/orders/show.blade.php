@@ -1,5 +1,7 @@
 @extends('layouts.masterr')
 
+@section('title', 'Artisana - Commande ' . $order->idOrder)
+
 @section('content1')
 
 <!-- breadcrumb-section -->
@@ -9,7 +11,7 @@
             <div class="col-lg-8 offset-lg-2 text-center">
                 <div class="breadcrumb-text">
                     <p>Détails de la commande</p>
-                    <h1>Commande #{{ $order->idOrder }}</h1>
+                    <h1>Commandes</h1>
                 </div>
             </div>
         </div>

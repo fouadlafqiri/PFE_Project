@@ -1,5 +1,7 @@
 @extends('layouts.masterr')
 
+@section('title', 'Artisana - Mes Commandes')
+
 @section('content1')
 
 <!-- breadcrumb-section -->

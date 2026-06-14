@@ -1,5 +1,5 @@
 @extends('layouts.masterr')
-
+@section('title', 'Artisana - ' . $product->nameProduct)
 @section('content1')
 
 <div class="breadcrumb-section breadcrumb-bg">
@@ -80,7 +80,7 @@
                     <div class="d-flex align-items-center mb-3">
                         <input type="number" name="quantity" value="1" min="1"
                                class="form-control w-25 me-3">
-                        <button type="submit" class="cart-btn">
+                        <button type="submit" class="modern-cart-btn">
                             <i class="fas fa-shopping-cart"></i> Ajouter au Panier
                         </button>
                     </div>

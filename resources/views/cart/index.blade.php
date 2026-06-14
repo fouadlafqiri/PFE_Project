@@ -1,5 +1,7 @@
 @extends('layouts.masterr')
 
+@section('title', 'Artisana - Panier')
+
 @section('content1')
 
 <!-- breadcrumb-section -->
@@ -154,22 +156,36 @@
                 </div>
 
                 <!-- Clear Cart -->
-                <form action="{{ route('cart.clear') }}"
-                      method="POST"
-                      class="mt-4">
+                                <div class="mt-4">
+                                        <button type="button" class="danger-btn" data-toggle="modal" data-target="#clearCartModal">
+                                                Vider le panier
+                                        </button>
+                                </div>
 
-                    @csrf
-                    @method('DELETE')
-
-                    <button type="submit"
-                            class="boxed-btn"
-                            onclick="return confirm('Vider le panier ?')">
-
-                        Vider le panier
-
-                    </button>
-
-                </form>
+                                <!-- Clear Cart Modal -->
+                                <div class="modal fade" id="clearCartModal" tabindex="-1" role="dialog" aria-labelledby="clearCartModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="clearCartModalLabel">Confirmer la suppression</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Voulez-vous vraiment vider le panier ? Cette action est irréversible.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                                                <form action="{{ route('cart.clear') }}" method="POST" style="display:inline-block; margin:0;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="danger-btn">Vider le panier</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
             </div>
 

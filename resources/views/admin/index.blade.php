@@ -1,5 +1,5 @@
 @extends('admin.master')
-
+@section('title', 'Tableau de Bord')
 @section('admin-content')
 
 <h1 class="h3 mb-3"><strong>Tableau de Bord</strong></h1>

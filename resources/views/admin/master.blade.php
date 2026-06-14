@@ -50,6 +50,20 @@
                                 <span class="align-middle">Reviews</span>
                             </a>
                         </li>
+
+                        <li class="sidebar-item {{ request()->routeIs('admin.contacts.*') ? 'active' : '' }}">
+                            <a class="sidebar-link" href="{{ route('admin.contacts.index') }}">
+                                <i class="align-middle" data-feather="mail"></i>
+                                <span class="align-middle">Messages</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item {{ request()->routeIs('admin.news.*') ? 'active' : '' }}">
+                            <a class="sidebar-link" href="{{ route('admin.news.index') }}">
+                                <i class="align-middle" data-feather="book-open"></i>
+                                <span class="align-middle">Actualités</span>
+                            </a>
+                        </li>
                     @endif
 
                     <li class="sidebar-item {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">

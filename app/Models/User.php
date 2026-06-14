@@ -62,9 +62,25 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    public function user(){
+
+    public function getPhotoUrlAttribute()
+    {
+        if (! $this->photo) {
+            return null;
+        }
+
+        if (preg_match('/^https?:\/\//', $this->photo)) {
+            return $this->photo;
+        }
+
+        return asset($this->photo);
+    }
+
+    public function user()
+    {
         return '00';
     }
+
     public function orders(){
         return $this->hasMany('App\Models\Order');
     }
